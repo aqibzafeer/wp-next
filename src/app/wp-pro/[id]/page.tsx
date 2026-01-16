@@ -151,9 +151,9 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center max-w-md mx-auto">
             <p className="text-text/70 mb-6">{error || 'The product you are looking for does not exist.'}</p>
-            <Button href="/wp-pro" variant="primary">
+            <Link href="/wp-pro" className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition">
               Back to Products
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
