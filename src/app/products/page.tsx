@@ -2,6 +2,7 @@
 
 import HeroSection from '@/components/HeroSection';
 import ProductsWithFilters from '@/components/ProductsWithFilters';
+import SectionHeader from '@/components/SectionHeader';
 import { DUMMY_PRODUCTS, CATEGORIES } from '@/lib/dummyData';
 
 export default function ProductsPage() {
@@ -16,9 +17,18 @@ export default function ProductsPage() {
         align="center"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <ProductsWithFilters products={DUMMY_PRODUCTS} categories={CATEGORIES} href={(id) => `/product/${id}`} />
-      </div>
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="mb-12 sm:mb-16">
+            <SectionHeader
+              eyebrow="BROWSE COLLECTION"
+              title="Find Your Perfect Style"
+              subtitle="Filter and discover from our extensive collection of premium clothing tailored to match every occasion and preference"
+            />
+          </div>
+          <ProductsWithFilters products={DUMMY_PRODUCTS} categories={CATEGORIES} href={(id) => `/product/${id}`} />
+        </div>
+      </section>
     </div>
   );
 }

@@ -6,6 +6,7 @@
   --color-secondary: oklch(98.19% 0.027 280.45);
   --color-accent: oklch(71.51% 0.224 3.45);
   --color-text: oklch(17.84% 0.021 280.2);
+  --color-heading: var(--color-text);
   --color-background: oklch(99.63% 0.007 286.33);
   --color-border: oklch(87.56% 0.015 282.47);
 

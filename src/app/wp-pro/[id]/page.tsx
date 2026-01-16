@@ -134,8 +134,11 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
     return (
       <div>
         <HeroSection title="Loading..." minHeight="sm" />
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center items-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/30 border-t-primary mx-auto mb-4"></div>
+            <p className="text-text/70 font-medium">Loading product...</p>
+          </div>
         </div>
       </div>
     );
@@ -145,12 +148,12 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
     return (
       <div>
         <HeroSection title="Product Not Found" minHeight="sm" />
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="text-center">
-            <p className="text-gray-600 mb-4">{error || 'The product you are looking for does not exist.'}</p>
-            <Link href="/wp-pro" className="inline-block px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center max-w-md mx-auto">
+            <p className="text-text/70 mb-6">{error || 'The product you are looking for does not exist.'}</p>
+            <Button href="/wp-pro" variant="primary">
               Back to Products
-            </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -176,25 +179,28 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
       <HeroSection title={product.name} subtitle={product.category} minHeight="sm" image={product.image} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link href="/wp-pro" className="text-indigo-600 hover:text-indigo-800 mb-6 inline-block">
+        <Link
+          href="/wp-pro"
+          className="inline-block mb-8 text-indigo-600 hover:text-indigo-700 font-semibold"
+        >
           ← Back to Products
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Images */}
           <div>
-            <div className="bg-gray-100 rounded-lg overflow-hidden mb-4">
+            <div className="mb-6 h-96 sm:h-[500px] lg:h-[600px] bg-gray-100 rounded-lg overflow-hidden">
               <img
                 src={images[selectedImage]?.src || product.image}
                 alt={product.name}
-                className="w-full h-96 object-cover"
+                className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/cat/women.jpg';
                 }}
               />
             </div>
             {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
+              <div className="flex gap-2 overflow-x-auto pb-2">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
@@ -218,38 +224,36 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
           </div>
 
           {/* Details */}
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-gray-600 mb-4 text-lg">{product.category}</p>
+          <div className="space-y-6">
+            <div>
+              <p className="text-indigo-600 font-bold uppercase text-sm mb-2">{product.category}</p>
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
+            </div>
 
             {/* Price */}
-            <div className="mb-6 pb-6 border-b">
+            <div className="pb-6 border-b border-gray-200">
               {hasDiscount ? (
-                <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-bold text-gray-900">Rs.{displaySalePrice?.toFixed(2)}</span>
-                  <span className="text-2xl text-gray-500 line-through">Rs.{displayPrice.toFixed(2)}</span>
-                  <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    -{discountPercent}%
+                <div className="flex items-baseline gap-4">
+                  <span className="text-3xl sm:text-4xl font-bold text-indigo-600">
+                    Rs {displaySalePrice?.toFixed(2)}
                   </span>
+                  <span className="text-lg text-gray-500 line-through">Rs {displayPrice.toFixed(2)}</span>
                 </div>
               ) : (
-                <span className="text-4xl font-bold text-gray-900">Rs.{displayPrice.toFixed(2)}</span>
-              )}
-              {product.type === 'variable' && variations.length > 0 && !selectedVariant && (
-                <p className="text-sm text-gray-500 mt-2">Select options to see price</p>
+                <span className="text-3xl sm:text-4xl font-bold text-gray-900">Rs {displayPrice.toFixed(2)}</span>
               )}
             </div>
 
             {/* Stock Status */}
             <div className="mb-6">
               <span
-                className={`inline-block text-sm font-semibold px-4 py-2 rounded-full ${
+                className={`inline-block text-sm font-semibold px-4 py-2 rounded ${
                   displayStockStatus === 'instock'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
                 }`}
               >
-                {displayStockStatus === 'instock' ? '✓ In Stock' : '✗ Out of Stock'}
+                {displayStockStatus === 'instock' ? 'In Stock' : 'Out of Stock'}
               </span>
             </div>
 
@@ -295,17 +299,9 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
               </div>
             )}
 
-            {/* SKU */}
-            {product.sku && (
-              <div className="mb-6 text-sm">
-                <span className="text-gray-600">SKU: </span>
-                <span className="font-mono text-gray-900">{product.sku}</span>
-              </div>
-            )}
-
             {/* Short Description */}
             {product.short_description && (
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+              <div className="mb-6 p-4 bg-blue-50 rounded">
                 <h3 className="font-semibold text-gray-900 mb-2">Summary</h3>
                 <div
                   className="text-gray-700 text-sm"
@@ -318,7 +314,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
             <div className="mb-8">
               <div className="flex items-center gap-4 mb-4">
                 <span className="text-sm font-medium text-gray-700">Quantity:</span>
-                <div className="flex items-center border border-gray-300 rounded-lg">
+                <div className="flex items-center border border-gray-300 rounded">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="px-4 py-2 hover:bg-gray-100 transition text-lg font-bold"
@@ -354,7 +350,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
                     }
                   }}
                   disabled={displayStockStatus !== 'instock'}
-                  className={`flex-1 py-3 px-6 rounded-lg font-semibold transition ${
+                  className={`flex-1 py-3 px-6 rounded font-semibold transition ${
                     displayStockStatus !== 'instock'
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : isAdded
@@ -367,13 +363,13 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
                 {isAdded && (
                   <Link
                     href="/cart"
-                    className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 font-semibold transition"
+                    className="px-6 py-3 bg-gray-800 text-white rounded hover:bg-gray-900 font-semibold transition"
                   >
                     View Cart
                   </Link>
                 )}
                 {!isAdded && (
-                  <button className="px-6 py-3 border-2 border-gray-300 rounded-lg hover:border-gray-400 transition">
+                  <button className="px-6 py-3 border-2 border-gray-300 rounded hover:border-gray-400 transition">
                     ♡ Wishlist
                   </button>
                 )}
@@ -401,7 +397,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
               <Link
                 key={i}
                 href="/wp-pro"
-                className="text-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                className="text-center p-4 bg-gray-50 rounded hover:bg-gray-100 transition"
               >
                 <div className="mb-2">📦</div>
                 <p className="text-sm text-gray-600">Explore More Products</p>

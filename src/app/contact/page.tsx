@@ -67,10 +67,10 @@ export default function ContactPage() {
                     <div className="ml-4">
                       <h4 className="text-lg md:text-xl font-semibold">Phone</h4>
                       <a
-                        href="tel:+1-800-000-0000"
+                        href="tel:+92-202-508-9439"
                         className="mt-1 text-white/90 hover:text-white hover:underline block"
                       >
-                        +1-800-000-0000
+                        +92 202 508 9439
                       </a>
                     </div>
                   </div>
@@ -96,15 +96,8 @@ export default function ContactPage() {
                     <div className="ml-4">
                       <h4 className="text-lg md:text-xl font-semibold">Address</h4>
                       <p className="mt-1 text-white/90">
-                        <a
-                          href="https://maps.google.com/?q=123+Fashion+Street,+New+York,+NY"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-white hover:underline"
-                        >
-                          123 Fashion Street<br />
-                          New York, NY 10001
-                        </a>
+                        I-10 Islamabad<br />
+                        Pakistan
                       </p>
                     </div>
                   </div>

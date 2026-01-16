@@ -32,10 +32,10 @@ export default function ProductGrid({
         return (
           <div
             key={product.id}
-            className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
+            className="group bg-background rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-border"
           >
             <Link href={`/product/${product.id}`} className="block relative">
-              <div className="aspect-square overflow-hidden bg-gray-100 relative">
+              <div className="aspect-square overflow-hidden bg-secondary relative">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -44,12 +44,12 @@ export default function ProductGrid({
               </div>
               <div className="absolute top-3 left-3 flex flex-col gap-2">
                 {hasDiscount && (
-                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  <span className="bg-accent text-text text-xs font-bold px-2 py-1 rounded-full">
                     -{discountPercent}%
                   </span>
                 )}
                 {product.stock_status === "instock" && (
-                  <span className="bg-green-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                  <span className="bg-primary text-text text-xs font-medium px-2 py-1 rounded-full">
                     In Stock
                   </span>
                 )}
@@ -58,21 +58,21 @@ export default function ProductGrid({
 
             <div className="p-4">
               <Link href={`/product/${product.id}`}>
-                <h3 className="font-semibold text-gray-900 hover:text-blue-600 transition line-clamp-2 text-sm">
+                <h3 className="font-semibold text-text hover:text-primary transition line-clamp-2 text-sm">
                   {product.name}
                 </h3>
               </Link>
 
-              <p className="text-xs text-gray-500 mt-1">{product.category}</p>
+              <p className="text-text/70 text-xs mt-1">{product.category}</p>
 
               <div className="mt-3 flex items-baseline gap-2">
                 {hasDiscount ? (
                   <>
-                    <span className="text-lg font-bold text-gray-900">Rs {product.sale_price}</span>
-                    <span className="text-sm text-gray-500 line-through">Rs {product.price}</span>
+                    <span className="text-lg font-bold text-text">Rs {product.sale_price}</span>
+                    <span className="text-sm text-text/70 line-through">Rs {product.price}</span>
                   </>
                 ) : (
-                  <span className="text-lg font-bold text-gray-900">Rs {product.price}</span>
+                  <span className="text-lg font-bold text-text">Rs {product.price}</span>
                 )}
               </div>
 
@@ -81,13 +81,13 @@ export default function ProductGrid({
                   onClick={() => handleAddToCart(product.id)}
                   className={`flex-1 py-2 px-3 rounded-lg transition text-sm font-medium ${
                     addedId === product.id
-                      ? 'bg-green-600 text-white'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                      ? 'bg-primary-hover text-background'
+                      : 'bg-primary text-background hover:bg-primary-hover'
                   }`}
                 >
                   {addedId === product.id ? '✓ Added' : 'Add to Cart'}
                 </button>
-                <button className="px-3 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition">
+                <button className="px-3 py-2 border border-border rounded-lg hover:border-primary transition">
                   ♡
                 </button>
               </div>

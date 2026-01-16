@@ -188,11 +188,11 @@ export default function ProductsWithFilters({
                     <div className="flex items-baseline gap-2 mb-3">
                       {hasDiscount ? (
                         <>
-                          <span className="text-lg font-bold text-gray-900">₹{product.sale_price!.toFixed(2)}</span>
-                          <span className="text-sm text-gray-500 line-through">₹{product.price.toFixed(2)}</span>
+                          <span className="text-lg font-bold text-gray-900">Rs {product.sale_price!.toFixed(2)}</span>
+                          <span className="text-sm text-gray-500 line-through">Rs {product.price.toFixed(2)}</span>
                         </>
                       ) : (
-                        <span className="text-lg font-bold text-gray-900">₹{product.price.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">Rs {product.price.toFixed(2)}</span>
                       )}
                     </div>
 

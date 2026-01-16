@@ -1,7 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import HeroSection from '@/components/HeroSection';
+import SectionHeader from '@/components/SectionHeader';
+import BenefitCard from '@/components/BenefitCard';
+import Button from '@/components/Button';
 import { FiShoppingBag, FiTarget, FiTrendingUp, FiAward, FiZap, FiUsers } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaInstagram, FaTiktok, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
@@ -33,67 +37,30 @@ export default function AboutPage() {
         subtitle="Welcome to AG — where fashion meets passion! Since 2015, we've been creating stylish, comfortable, and high-quality clothing that makes you feel confident and look your best."
         eyebrow="ABOUT US"
         image="/products/jeans.jpg"
+        imageAlt="Stacked denim jeans"
+        imagePriority
         minHeight="lg"
-        align="left"
+        align="center"
         ctaText="Shop Our Collections"
         ctaHref="/products"
       />
 
       {/* Core Values Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500">
-                Our Core Values
-              </span>
-            </h2>
-            <p className="max-w-2xl mx-auto text-gray-600">
-              The principles that guide everything we do
-            </p>
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="mb-12 sm:mb-16">
+            <SectionHeader
+              eyebrow="WHO WE ARE"
+              title="Our Core Values"
+              subtitle="The principles that guide everything we do"
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: FiShoppingBag,
-                title: 'Our Products',
-                desc: 'High-quality products tailored to your needs',
-              },
-              {
-                icon: FiTarget,
-                title: 'Our Mission',
-                desc: 'Empower lives through innovation and quality',
-              },
-              {
-                icon: FiTrendingUp,
-                title: 'Our Vision',
-                desc: 'Global leader in innovative solutions',
-              },
-              {
-                icon: FiAward,
-                title: 'Our Values',
-                desc: 'Integrity, quality, and customer satisfaction',
-              },
-            ].map((value, index) => {
-              const IconComponent = value.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 border border-gray-100 hover:-translate-y-2"
-                >
-                  <div className="bg-indigo-100 p-4 rounded-full mb-4 flex items-center justify-center">
-                    <IconComponent className="w-8 h-8 text-indigo-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500">
-                      {value.title}
-                    </span>
-                  </h3>
-                  <p className="text-gray-600">{value.desc}</p>
-                </div>
-              );
-            })}
+            <BenefitCard icon={<FiShoppingBag />} title="Our Products" description="High-quality products tailored to your needs" color="blue" />
+            <BenefitCard icon={<FiTarget />} title="Our Mission" description="Empower lives through innovation and quality" color="green" />
+            <BenefitCard icon={<FiTrendingUp />} title="Our Vision" description="Global leader in innovative solutions" color="purple" />
+            <BenefitCard icon={<FiAward />} title="Our Values" description="Integrity, quality, and customer satisfaction" color="yellow" />
           </div>
         </div>
       </section>
@@ -104,10 +71,14 @@ export default function AboutPage() {
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Image Section */}
             <div className="lg:w-1/2 relative">
-              <img
+              <Image
                 src="/banner-img.jpeg"
                 alt="Sustainable garment production"
-                className="rounded-xl shadow-xl w-full"
+                width={1514}
+                height={800}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="rounded-xl shadow-xl w-full h-auto"
+                priority={false}
               />
               <div className="absolute -bottom-6 -right-6 bg-white px-6 py-3 rounded-lg shadow-md border border-gray-100">
                 <p className="font-medium text-indigo-600">Since 2015</p>

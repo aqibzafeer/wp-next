@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -6,6 +7,8 @@ interface HeroSectionProps {
   subtitle?: string;
   eyebrow?: string;
   image?: string;
+  imageAlt?: string;
+  imagePriority?: boolean;
   minHeight?: 'sm' | 'md' | 'lg';
   align?: 'center' | 'left';
   ctaText?: string;
@@ -18,6 +21,8 @@ export default function HeroSection({
   subtitle,
   eyebrow,
   image,
+  imageAlt = '',
+  imagePriority = false,
   minHeight = 'md',
   align = 'center',
   ctaText,
@@ -38,17 +43,21 @@ export default function HeroSection({
       {/* Background image */}
       <div className="absolute inset-0">
         {image ? (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${image})` }}
-            aria-hidden="true"
+          <Image
+            src={image}
+            alt={imageAlt}
+            fill
+            priority={imagePriority}
+            sizes="100vw"
+            fetchPriority={imagePriority ? 'high' : undefined}
+            className="object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-purple-700 to-accent" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent" aria-hidden="true" />
         )}
 
         {/* Overlays for readability */}
-        <div className="absolute inset-0 bg-black/80" aria-hidden="true" />
+        <div className="absolute inset-0 bg-text/70 sm:bg-text/80" aria-hidden="true" />
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-background/10 rounded-full blur-2xl" aria-hidden="true" />
         <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-primary/10 rounded-full blur-2xl" aria-hidden="true" />
       </div>
@@ -79,7 +88,7 @@ export default function HeroSection({
                 ) : (
                   <Link
                     href={ctaHref}
-                    className="inline-block px-8 py-3 bg-background text-primary font-weight-bold rounded-lg shadow-lg hover:bg-secondary transition-all transform hover:-translate-y-1"
+                    className="inline-block px-8 py-3 bg-background text-text font-weight-bold rounded-lg shadow-lg hover:bg-background/80 transition-all transform hover:-translate-y-1"
                   >
                     {ctaText}
                   </Link>
