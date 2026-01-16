@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(65.88% 0.199 280.95);
+  --color-primary-hover: oklch(61.39% 0.211 281.04);
+  --color-secondary: oklch(98.19% 0.027 280.45);
+  --color-accent: oklch(71.51% 0.224 3.45);
+  --color-text: oklch(17.84% 0.021 280.2);
+  --color-background: oklch(99.63% 0.007 286.33);
+  --color-border: oklch(87.56% 0.015 282.47);
+
+  --font-family-heading: var(--font-geist-sans);
+  --font-family-body: var(--font-geist-sans);
+
+  --font-size-h1: 4.5rem;
+  --font-size-h2: 3rem;
+  --font-size-h3: 2.25rem;
+  --font-size-h4: 1.875rem;
+  --font-size-h5: 1.5rem;
+  --font-size-h6: 1.25rem;
+
+  --font-weight-heading: 800;
+  --font-weight-body: 400;
+  --font-weight-bold: 700;
+}
+
+

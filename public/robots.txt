@@ -1,0 +1,11 @@
+# robots.txt for AG
+
+User-agent: *
+Allow: /
+
+# Disallow admin or private pages
+Disallow: /dashboard/
+Disallow: /checkout/
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
