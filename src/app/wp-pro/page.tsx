@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import HeroSection from '@/components/HeroSection';
 import ProductsWithFilters from '@/components/ProductsWithFilters';
+import ProductSkeleton from '@/components/ProductSkeleton';
 import { fetchWooProducts, fetchWooCategories } from '@/lib/woocommerceAPI';
 
 interface Product {
@@ -59,8 +60,16 @@ export default function WooProPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading && (
-          <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Loading Products...</h2>
+              <p className="text-gray-600 mt-1">Please wait while we fetch your products</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </div>
           </div>
         )}
 

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cartContext';
+import ProductSkeleton from '@/components/ProductSkeleton';
 
 interface Product {
   id: number;
@@ -19,6 +20,7 @@ interface ProductsWithFiltersProps {
   categories: string[];
   href?: (id: number) => string; // Custom href function for different product sources
   isWooCommerce?: boolean;
+  loading?: boolean;
 }
 
 export default function ProductsWithFilters({
@@ -26,6 +28,7 @@ export default function ProductsWithFilters({
   categories,
   href = (id) => `/product/${id}`,
   isWooCommerce = false,
+  loading = false,
 }: ProductsWithFiltersProps) {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('');
@@ -133,14 +136,22 @@ export default function ProductsWithFilters({
       <div className="flex-1">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            Results ({filteredProducts.length})
+            {loading ? 'Loading Products...' : `Results (${filteredProducts.length})`}
           </h2>
           <p className="text-gray-600 mt-1">
-            {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+            {loading
+              ? 'Please wait while we fetch your products'
+              : `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''} found`}
           </p>
         </div>
 
-        {filteredProducts.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {filteredProducts.map((product) => {
               const hasDiscount = product.sale_price && product.sale_price < product.price;
