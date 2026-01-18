@@ -3,6 +3,7 @@
 import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import HeroSection from '@/components/HeroSection';
+import Button from '@/components/Button';
 import { fetchWooProductById, fetchWooProductVariations } from '@/lib/woocommerceAPI';
 import { useCart } from '@/lib/cartContext';
 

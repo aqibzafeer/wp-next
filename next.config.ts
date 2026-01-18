@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'ambalafoods.crea8ive.solutions',
+        hostname: 'api.crea8ive.solutions',
       },
     ],
   },

@@ -26,12 +26,9 @@ export default function WooProPage() {
     async function loadData() {
       try {
         setLoading(true);
-
-        // Fetch products
         const wooProducts = await fetchWooProducts({ per_page: 50 });
         setProducts(wooProducts);
 
-        // Extract unique categories from products
         const uniqueCategories = Array.from(
           new Set(wooProducts.map((p) => p.category))
         ).sort();
