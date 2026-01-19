@@ -20,7 +20,7 @@ export default function CategoryGrid() {
           {FEATURED_CATEGORIES.map((cat) => (
             <Link
               key={cat.name}
-              href={`/products?category=${encodeURIComponent(cat.name)}`}
+              href={`/shop?category=${encodeURIComponent(cat.name)}`}
               className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 aspect-square min-h-40 sm:min-h-56 lg:min-h-72 flex flex-col items-center justify-center"
             >
               <div

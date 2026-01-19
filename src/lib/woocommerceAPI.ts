@@ -35,6 +35,7 @@ interface WooProduct {
   attributes?: WooAttribute[];
   default_attributes?: WooDefaultAttribute[];
   variations?: number[];
+  date_created?: string;
 }
 
 // Create Basic Auth header for WooCommerce API
@@ -92,6 +93,7 @@ export async function fetchWooProducts(params?: { per_page?: number; page?: numb
       attributes: product.attributes || [],
       default_attributes: product.default_attributes || [],
       variations: product.variations || [],
+      date_created: product.date_created || new Date().toISOString(),
     }));
   } catch (error) {
     console.error('Error fetching WooCommerce products:', error);
@@ -134,6 +136,7 @@ export async function fetchWooProductById(id: number) {
       attributes: product.attributes || [],
       default_attributes: product.default_attributes || [],
       variations: product.variations || [],
+      date_created: product.date_created || new Date().toISOString(),
     };
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);

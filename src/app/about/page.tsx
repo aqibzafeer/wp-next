@@ -42,7 +42,7 @@ export default function AboutPage() {
         minHeight="lg"
         align="center"
         ctaText="Shop Our Collections"
-        ctaHref="/products"
+        ctaHref="/shop"
       />
 
       {/* Core Values Section */}
@@ -159,8 +159,8 @@ export default function AboutPage() {
                   <>
                     <p className="text-gray-600 mt-2">
                       email:{' '}
-                      <a href="mailto:info@store.com" className="text-indigo-600 hover:text-indigo-800 font-medium">
-                        info@store.com
+                      <a href="mailto:aqib@azlangarments.live" className="text-indigo-600 hover:text-indigo-800 font-medium">
+                        aqib@azlangarments.live
                       </a>
                     </p>
                     <p className="text-gray-600 mt-2">

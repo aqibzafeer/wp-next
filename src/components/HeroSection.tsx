@@ -26,7 +26,7 @@ export default function HeroSection({
   minHeight = 'md',
   align = 'center',
   ctaText,
-  ctaHref = '/products',
+  ctaHref = '/shop',
   children,
 }: HeroSectionProps) {
   const heightClass =

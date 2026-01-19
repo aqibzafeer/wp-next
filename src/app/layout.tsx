@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/lib/cartContext";
+import { ToasterProvider } from "@/lib/toasterContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,11 +76,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-text`}
       >
         <CartProvider>
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <ToasterProvider>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </ToasterProvider>
         </CartProvider>
       </body>
     </html>

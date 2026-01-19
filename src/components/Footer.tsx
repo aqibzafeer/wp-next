@@ -11,7 +11,7 @@ export default function Footer() {
             <h3 className="text-background font-semibold mb-4">Quick Links</h3>
             <ul className="text-sm space-y-2">
               <li><a href="/" className="hover:text-primary">Home</a></li>
-              <li><a href="/products" className="hover:text-primary">Products</a></li>
+              <li><a href="/shop" className="hover:text-primary">Products</a></li>
               <li><a href="/about" className="hover:text-primary">About</a></li>
               <li><a href="/contact" className="hover:text-primary">Contact</a></li>
             </ul>
@@ -19,16 +19,16 @@ export default function Footer() {
           <div>
             <h3 className="text-background font-semibold mb-4">Categories</h3>
             <ul className="text-sm space-y-2">
-              <li><a href="/products?category=Jeans" className="hover:text-primary">Jeans</a></li>
-              <li><a href="/products?category=Shirt" className="hover:text-primary">Shirts</a></li>
-              <li><a href="/products?category=Jacket" className="hover:text-primary">Jackets</a></li>
-              <li><a href="/products?category=Shoes" className="hover:text-primary">Shoes</a></li>
+              <li><a href="/shop" className="hover:text-primary">Jeans</a></li>
+              <li><a href="/shop" className="hover:text-primary">Shirts</a></li>
+              <li><a href="/shop" className="hover:text-primary">Jackets</a></li>
+              <li><a href="/shop" className="hover:text-primary">Shoes</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-background font-semibold mb-4">Contact</h3>
-            <p className="text-sm">Email: info@store.com</p>
-            <p className="text-sm">Phone: +1-800-000-0000</p>
+            <p className="text-sm">Email: aqib@azlangarments.live</p>
+            <p className="text-sm">Phone: +92 302 508 9439</p>
           </div>
         </div>
         <div className="border-t border-border pt-8 text-center text-sm">

@@ -40,6 +40,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-background shadow-lg">
       <nav className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
+          {/* Logo */}
           <Link 
             href="/" 
             className="flex items-center gap-2 sm:gap-3 group flex-shrink-0"
@@ -54,11 +55,11 @@ export default function Header() {
             />
           </Link>
           
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-1">
             {[
               { href: '/', label: 'Home', icon: FiHome },
               { href: '/about', label: 'About', icon: FiInfo },
-              { href: '/products', label: 'Products', icon: FiShoppingBag },
               { href: '/shop', label: 'Shop', icon: FiPackage },
               { href: '/contact', label: 'Contact', icon: FiMessageCircle },
             ].map((item) => {
@@ -77,9 +78,9 @@ export default function Header() {
             })}
           </div>
 
-          {/* Cart & Search Icons */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <Link href="/cart" className="hidden md:flex relative p-2 hover:bg-secondary rounded-lg transition-colors text-text hover:text-primary" title="Cart">
+          {/* Desktop: Cart & Account Icons */}
+          <div className="hidden md:flex items-center gap-2 md:gap-4">
+            <Link href="/cart" className="flex relative p-2 hover:bg-secondary rounded-lg transition-colors text-text hover:text-primary" title="Cart">
               <FiShoppingCart className="w-5 sm:w-6 h-5 sm:h-6" />
               {getTotalItems() > 0 && (
                 <span className="absolute top-0 right-0 w-5 h-5 bg-accent text-background text-xs flex items-center justify-center rounded-full font-weight-bold">
@@ -87,12 +88,12 @@ export default function Header() {
                 </span>
               )}
             </Link>
-            <button className="hidden sm:flex p-2 hover:bg-secondary rounded-lg transition-colors text-text hover:text-primary" title="Account">
+            <button className="flex p-2 hover:bg-secondary rounded-lg transition-colors text-text hover:text-primary" title="Account">
               <FiUser className="w-5 sm:w-6 h-5 sm:h-6" />
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile: Menu Button (Center) */}
           <button
             ref={buttonRef}
             className="md:hidden p-2 hover:bg-secondary rounded-lg transition-colors text-text"
@@ -107,6 +108,16 @@ export default function Header() {
               <FiMenu className="w-6 h-6" />
             )}
           </button>
+
+          {/* Mobile: Cart Icon (Right) */}
+          <Link href="/cart" className="md:hidden flex relative p-2 hover:bg-secondary rounded-lg transition-colors text-text hover:text-primary" title="Cart">
+            <FiShoppingCart className="w-5 h-5" />
+            {getTotalItems() > 0 && (
+              <span className="absolute top-0 right-0 w-4 h-4 bg-accent text-background text-xs flex items-center justify-center rounded-full font-weight-bold">
+                {getTotalItems()}
+              </span>
+            )}
+          </Link>
         </div>
 
         {/* Mobile Menu with Backdrop */}
@@ -129,7 +140,6 @@ export default function Header() {
                 {[
                   { href: '/', label: 'Home', icon: FiHome },
                   { href: '/about', label: 'About', icon: FiInfo },
-                  { href: '/products', label: 'Products', icon: FiShoppingBag },
                   { href: '/shop', label: 'Shop', icon: FiPackage },
                   { href: '/contact', label: 'Contact', icon: FiMessageCircle },
                 ].map((item) => {
@@ -149,21 +159,9 @@ export default function Header() {
                 
                 {/* Mobile Actions */}
                 <div className="border-t border-border mt-2 pt-2 flex gap-2 px-1">
-                  <button className="flex-1 px-3 py-2 hover:bg-secondary text-text hover:text-primary rounded-lg transition-colors flex items-center justify-center gap-2 sm:hidden">
+                  <button className="flex-1 px-3 py-2 hover:bg-secondary text-text hover:text-primary rounded-lg transition-colors flex items-center justify-center gap-2">
                     <FiSearch className="w-5 h-5" />
                     <span className="text-sm">Search</span>
-                  </button>
-                  <Link href="/cart" className="flex-1 px-3 py-2 hover:bg-secondary text-text hover:text-primary rounded-lg transition-colors flex items-center justify-center relative" onClick={() => setIsMobileMenuOpen(false)}>
-                    <FiShoppingCart className="w-5 h-5" />
-                    {getTotalItems() > 0 && (
-                      <span className="absolute top-1 right-1 w-4 h-4 bg-accent text-background text-xs flex items-center justify-center rounded-full font-weight-bold">
-                        {getTotalItems()}
-                      </span>
-                    )}
-                  </Link>
-                  <button className="flex-1 px-3 py-2 hover:bg-secondary text-text hover:text-primary rounded-lg transition-colors flex items-center justify-center gap-2 sm:hidden">
-                    <FiUser className="w-5 h-5" />
-                    <span className="text-sm">Account</span>
                   </button>
                 </div>
               </div>

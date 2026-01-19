@@ -109,7 +109,7 @@ export default function CheckoutPage() {
             <p className="text-gray-600 mb-6">Your cart is empty. Please add items before checkout.</p>
             <div className="flex gap-4 justify-center">
               <Link
-                href="/products"
+                href="/shop"
                 className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
               >
                 Browse Products

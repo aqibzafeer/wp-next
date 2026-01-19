@@ -24,6 +24,7 @@ export interface WooProduct extends Product {
   attributes?: WooAttribute[];
   default_attributes?: WooDefaultAttribute[];
   variations?: number[];
+  date_created?: string;
 }
 
 export interface WooAttribute {

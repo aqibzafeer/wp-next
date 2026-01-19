@@ -1,25 +1,42 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { DUMMY_PRODUCTS } from '@/lib/dummyData';
 import { calculateDiscount } from '@/lib/utils';
 import { useState } from 'react';
 import { useCart } from '@/lib/cartContext';
+import { useToast } from '@/lib/toasterContext';
+import type { WooProduct } from '@/types';
 
 export default function ProductGrid({
-  products = DUMMY_PRODUCTS,
+  products = DUMMY_PRODUCTS as any,
   isLoading = false,
 }: {
-  products?: typeof DUMMY_PRODUCTS;
+  products?: typeof DUMMY_PRODUCTS | WooProduct[];
   isLoading?: boolean;
 }) {
-  const { addToCart } = useCart();
+  const { addToCart, addProductToCart } = useCart();
+  const { addToast } = useToast();
   const [addedId, setAddedId] = useState<number | null>(null);
 
-  const handleAddToCart = (productId: number) => {
-    addToCart(productId, 1);
-    setAddedId(productId);
+  const handleAddToCart = (product: any) => {
+    // Handle both WooProduct and dummy product formats
+    if ('sku' in product) {
+      // It's a WooProduct
+      addProductToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        sale_price: product.sale_price,
+        image: product.image,
+        category: product.category,
+      }, 1);
+    } else {
+      // It's a dummy product
+      addToCart(product.id, 1);
+    }
+    setAddedId(product.id);
+    addToast(`${product.name} added to cart`, 'success', 3000);
     setTimeout(() => setAddedId(null), 1500);
   };
 
@@ -34,7 +51,7 @@ export default function ProductGrid({
             key={product.id}
             className="group bg-background rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-border"
           >
-            <Link href={`/product/${product.id}`} className="block relative">
+            <div className="block relative">
               <div className="aspect-square overflow-hidden bg-secondary relative">
                 <img
                   src={product.image}
@@ -54,14 +71,12 @@ export default function ProductGrid({
                   </span>
                 )}
               </div>
-            </Link>
+            </div>
 
             <div className="p-4">
-              <Link href={`/product/${product.id}`}>
-                <h3 className="font-semibold text-text hover:text-primary transition line-clamp-2 text-sm">
-                  {product.name}
-                </h3>
-              </Link>
+              <h3 className="font-semibold text-text line-clamp-2 text-sm">
+                {product.name}
+              </h3>
 
               <p className="text-text/70 text-xs mt-1">{product.category}</p>
 
@@ -78,7 +93,7 @@ export default function ProductGrid({
 
               <div className="mt-4 flex gap-2">
                 <button
-                  onClick={() => handleAddToCart(product.id)}
+                  onClick={() => handleAddToCart(product)}
                   className={`flex-1 py-2 px-3 rounded-lg transition text-sm font-medium ${
                     addedId === product.id
                       ? 'bg-primary-hover text-background'

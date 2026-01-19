@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
 import CategoryGrid from '@/components/CategoryGrid';
@@ -8,35 +11,52 @@ import BenefitCard from '@/components/BenefitCard';
 import TestimonialCard from '@/components/TestimonialCard';
 import StatCard from '@/components/StatCard';
 import CTASection from '@/components/CTASection';
-import { DUMMY_PRODUCTS } from '@/lib/dummyData';
+import ProductSkeleton from '@/components/ProductSkeleton';
+import { fetchWooProducts } from '@/lib/woocommerceAPI';
+import type { WooProduct } from '@/types';
 import { FiTruck, FiLock, FiRotateCcw, FiChevronRight } from 'react-icons/fi';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Azlan Garments - Premium Fashion & Clothing Store',
-  description: 'Discover premium quality fashion and clothing at Azlan Garments. Shop trendy collections, traditional wear, and exclusive designs. Free shipping on orders over Rs 500.',
-  keywords: 'fashion, clothing, store, garments, traditional wear, casual wear, formal suits, premium quality',
-  openGraph: {
-    title: 'Azlan Garments - Premium Fashion & Clothing',
-    description: 'Shop our exclusive collection of premium fashion and clothing online.',
-    url: 'https://www.azlangarments.com',
-    siteName: 'Azlan Garments',
-    images: [
-      {
-        url: '/banner-img.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'Azlan Garments Store',
-      },
-    ],
-    type: 'website',
-  },
-};
 
 export default function Home() {
-    const featuredProducts = DUMMY_PRODUCTS.slice(0, 8);
-    const latestProducts = DUMMY_PRODUCTS.slice(4, 8);
-    const bestSellers = DUMMY_PRODUCTS.slice(0, 4);
+  const [latestProducts, setLatestProducts] = useState<WooProduct[]>([]);
+  const [bestSellers, setBestSellers] = useState<WooProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const products = await fetchWooProducts({ per_page: 50 });
+        
+        if (products.length === 0) {
+          setError('No products available. Please configure WooCommerce API credentials.');
+          setLoading(false);
+          return;
+        }
+
+        const sortedByPrice = [...products].sort((a, b) => {
+          const priceA = b.sale_price || b.price; 
+          const priceB = a.sale_price || a.price;
+          return priceA - priceB; 
+        });
+
+        const highestPriced = sortedByPrice.slice(0, 4);
+        const nextHighestPriced = sortedByPrice.slice(4, 8);
+        
+        setLatestProducts(highestPriced);
+        setBestSellers(nextHighestPriced.length > 0 ? nextHighestPriced : highestPriced.slice(0, 4));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to fetch products. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
     const heroSlides = [
       {
@@ -47,7 +67,7 @@ export default function Home() {
         image: '/products/jeans.jpg',
         imageAlt: 'Premium denim jeans collection',
         ctaText: 'Shop Now',
-        ctaHref: '/products',
+        ctaHref: '/shop',
       },
       {
         id: '2',
@@ -57,7 +77,7 @@ export default function Home() {
         image: '/products/suit.jpg',
         imageAlt: 'Formal business suits collection',
         ctaText: 'Browse Suits',
-        ctaHref: '/products?category=Suit',
+        ctaHref: '/shop',
       },
       {
         id: '3',
@@ -67,7 +87,7 @@ export default function Home() {
         image: '/products/kamiz.jpg',
         imageAlt: 'Traditional Kamiz Shalwar collection',
         ctaText: 'Explore Now',
-        ctaHref: '/products?category=Kamiz%20Shalwar',
+        ctaHref: '/shop',
       },
     ];
 
@@ -82,6 +102,25 @@ export default function Home() {
 
       <CategoryGrid />
 
+
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="max-w-7xl mx-auto w-full">
+          <CTASection
+            eyebrow="OUR STORY"
+            title="Timeless Collections, Modern Style"
+            subtitle="Explore our meticulously curated collections featuring the latest trends and timeless classics. From contemporary casual wear to sophisticated formal attire, we have everything you need to express your unique style and elevate your wardrobe."
+            image="/products/suit.jpg"
+            imageAlt="Exclusive fashion collection from Azlan Garments - Formal suits and premium clothing"
+            imagePosition="right"
+            buttons={[
+              { text: 'Shop Collections', href: '/shop', variant: 'primary' },
+              { text: 'Learn More', href: '/about', variant: 'outline' },
+            ]}
+          />
+        </div>
+      </section>
+
+
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-7xl mx-auto w-full">
           <div className="mb-12 sm:mb-16">
@@ -91,22 +130,38 @@ export default function Home() {
               subtitle="Discover our newest arrivals handpicked to bring you the latest fashion trends and timeless styles"
             />
           </div>
-          <ProductGrid products={latestProducts} />
-          <div className="text-center mt-12 sm:mt-16">
-            <Button
-              href="/products"
-              variant="primary"
-              size="lg"
-              icon={<FiChevronRight />}
-              iconPosition="right"
-            >
-              Explore All Products
-            </Button>
-          </div>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+              <p className="text-yellow-800">
+                <strong>Note:</strong> {error}
+              </p>
+            </div>
+          ) : (
+            <>
+              <ProductGrid products={latestProducts} />
+              <div className="text-center mt-12 sm:mt-16">
+                <Button
+                  href="/shop"
+                  variant="primary"
+                  size="lg"
+                  icon={<FiChevronRight />}
+                  iconPosition="right"
+                >
+                  Explore All Products
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      {/* Benefits Section */}
+
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary via-background to-secondary relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" aria-hidden="true" />
         <div className="max-w-7xl mx-auto w-full relative z-10">
@@ -128,21 +183,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Best Sellers Section */}
-      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="mb-12 sm:mb-16">
-            <SectionHeader
-              eyebrow="CUSTOMER FAVORITES"
-              title="Best Sellers"
-              subtitle="Handpicked bestsellers loved and trusted by thousands of satisfied customers"
-            />
+
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-text via-text/95 to-text text-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10" aria-hidden="true" />
+        <div className="max-w-7xl mx-auto w-full relative z-10">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-background mb-3">By The Numbers</h2>
+            <p className="text-background/80 text-base sm:text-lg">Our impact and success through the years</p>
           </div>
-          <ProductGrid products={bestSellers} />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+            <StatCard number="10K+" label="Happy Customers" icon="😊" />
+            <StatCard number="500+" label="Products Available" icon="👕" />
+            <StatCard number="98%" label="Satisfaction Rate" icon="⭐" />
+            <StatCard number="24/7" label="Customer Support" icon="💬" />
+          </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
+
+
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background via-secondary to-background">
         <div className="max-w-7xl mx-auto w-full">
           <div className="mb-12 sm:mb-16">
@@ -189,7 +248,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary via-accent to-primary relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
         <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -214,40 +272,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-7xl mx-auto w-full">
-          <CTASection
-            eyebrow="OUR STORY"
-            title="Timeless Collections, Modern Style"
-            subtitle="Explore our meticulously curated collections featuring the latest trends and timeless classics. From contemporary casual wear to sophisticated formal attire, we have everything you need to express your unique style and elevate your wardrobe."
-            image="/products/suit.jpg"
-            imageAlt="Exclusive fashion collection from Azlan Garments - Formal suits and premium clothing"
-            imagePosition="right"
-            buttons={[
-              { text: 'Shop Collections', href: '/products', variant: 'primary' },
-              { text: 'Learn More', href: '/about', variant: 'outline' },
-            ]}
-          />
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-text via-text/95 to-text text-background relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10" aria-hidden="true" />
-        <div className="max-w-7xl mx-auto w-full relative z-10">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-background mb-3">By The Numbers</h2>
-            <p className="text-background/80 text-base sm:text-lg">Our impact and success through the years</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
-            <StatCard number="10K+" label="Happy Customers" icon="😊" />
-            <StatCard number="500+" label="Products Available" icon="👕" />
-            <StatCard number="98%" label="Satisfaction Rate" icon="⭐" />
-            <StatCard number="24/7" label="Customer Support" icon="💬" />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

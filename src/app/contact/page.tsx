@@ -82,8 +82,8 @@ export default function ContactPage() {
                     </div>
                     <div className="ml-4">
                       <h4 className="text-lg md:text-xl font-semibold">Email</h4>
-                      <a href="mailto:info@store.com" className="mt-1 text-white/90 hover:text-white hover:underline block">
-                        info@store.com
+                      <a href="mailto:aqib@azlangarments.live" className="mt-1 text-white/90 hover:text-white hover:underline block">
+                        aqib@azlangarments.live
                       </a>
                     </div>
                   </div>

@@ -1,23 +1,98 @@
+'use client';
+
 import HeroSection from '@/components/HeroSection';
 import Button from '@/components/Button';
 import { DUMMY_PRODUCTS } from '@/lib/dummyData';
 import { calculateDiscount } from '@/lib/utils';
 import Link from 'next/link';
 import ProductAddToCart from '@/components/ProductAddToCart';
-import { use } from 'react';
-import { FiArrowLeft, FiHeart, FiCheck, FiX } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { FiArrowLeft, FiHeart, FiCheck, FiX, FiShoppingCart } from 'react-icons/fi';
+import { fetchWooProductById } from '@/lib/woocommerceAPI';
+import { useToast } from '@/lib/toasterContext';
+import { useCart } from '@/lib/cartContext';
+import type { WooProduct } from '@/types';
 
-export const generateStaticParams = async () => {
-  return DUMMY_PRODUCTS.map((product) => ({
-    id: product.id.toString(),
-  }));
-};
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<WooProduct | any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
+  const { addProductToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+  const productId = parseInt(params.id);
 
-export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
-  const product = DUMMY_PRODUCTS.find(p => p.id === parseInt(resolvedParams.id));
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  if (!product) {
+        // Try to fetch from WooCommerce first
+        const wooProduct = await fetchWooProductById(productId);
+        
+        if (wooProduct) {
+          setProduct(wooProduct);
+        } else {
+          // Fallback to dummy products
+          const dummyProduct = DUMMY_PRODUCTS.find(p => p.id === productId);
+          if (dummyProduct) {
+            setProduct(dummyProduct);
+          } else {
+            setError('Product not found');
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        // Fallback to dummy products on error
+        const dummyProduct = DUMMY_PRODUCTS.find(p => p.id === productId);
+        if (dummyProduct) {
+          setProduct(dummyProduct);
+        } else {
+          setError('Failed to load product');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    
+    setIsAdding(true);
+    addProductToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      sale_price: product.sale_price,
+      image: product.image,
+      category: product.category,
+    }, 1);
+    addToast(`${product.name} added to cart`, 'success', 3000);
+    setIsAdding(false);
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <HeroSection
+          title="Loading..."
+          subtitle="Please wait while we load the product details"
+          minHeight="sm"
+        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex justify-center items-center h-96">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product || error) {
     return (
       <div>
         <HeroSection
@@ -26,7 +101,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           minHeight="sm"
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Button href="/products" variant="primary">
+          <Button href="/shop" variant="primary">
             ← Back to Products
           </Button>
         </div>
@@ -49,7 +124,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-7xl mx-auto w-full">
           <div className="mb-8">
-            <Button href="/products" variant="outline" size="sm">
+            <Button href="/shop" variant="outline" size="sm">
               <FiArrowLeft className="mr-2" /> Back to Products
             </Button>
           </div>
@@ -128,7 +203,18 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <ProductAddToCart productId={product.id} />
+                <button
+                  onClick={handleAddToCart}
+                  disabled={isAdding || product.stock_status !== 'instock'}
+                  className={`px-8 py-4 font-bold rounded-full transition-all duration-300 flex items-center justify-center gap-2 ${
+                    product.stock_status !== 'instock'
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg hover:-translate-y-1'
+                  }`}
+                >
+                  <FiShoppingCart className="w-5 h-5" />
+                  {isAdding ? 'Adding...' : 'Add to Cart'}
+                </button>
                 <button className="px-8 py-4 border-2 border-primary text-primary font-bold rounded-full hover:bg-secondary/30 transition-all duration-300 flex items-center justify-center gap-2">
                   <FiHeart className="w-5 h-5" />
                   Wishlist

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cartContext';
+import { useToast } from '@/lib/toasterContext';
 import ProductSkeleton from '@/components/ProductSkeleton';
 
 interface Product {
@@ -35,6 +36,7 @@ export default function ProductsWithFilters({
   const [searchTerm, setSearchTerm] = useState('');
   const [addedId, setAddedId] = useState<number | null>(null);
   const { addProductToCart } = useCart();
+  const { addToast } = useToast();
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -330,6 +332,7 @@ export default function ProductsWithFilters({
                               category: product.category,
                             }, 1);
                             setAddedId(product.id);
+                            addToast(`${product.name} added to cart`, 'success', 3000);
                             setTimeout(() => setAddedId(null), 1500);
                           }
                         }}
