@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
 import CategoryGrid from '@/components/CategoryGrid';
 import ProductGrid from '@/components/ProductGrid';
@@ -15,6 +14,138 @@ import ProductSkeleton from '@/components/ProductSkeleton';
 import { fetchWooProducts } from '@/lib/woocommerceAPI';
 import type { WooProduct } from '@/types';
 import { FiTruck, FiLock, FiRotateCcw, FiChevronRight } from 'react-icons/fi';
+
+// Hero Slides Data
+const heroSlides = [
+  {
+    id: '1',
+    title: 'Welcome to Our Store',
+    subtitle: 'Discover our premium collection of clothing and fashion items',
+    eyebrow: 'SHOP',
+    image: '/products/jeans.jpg',
+    imageAlt: 'Premium denim jeans collection',
+    ctaText: 'Shop Now',
+    ctaHref: '/shop',
+  },
+  {
+    id: '2',
+    title: 'Exclusive Collections',
+    subtitle: 'Find the perfect outfit for every occasion',
+    eyebrow: 'FEATURED',
+    image: '/products/suit.jpg',
+    imageAlt: 'Formal business suits collection',
+    ctaText: 'Browse Suits',
+    ctaHref: '/shop',
+  },
+  {
+    id: '3',
+    title: 'Traditional Wear',
+    subtitle: 'Embrace elegance with our traditional collection',
+    eyebrow: 'TRENDING',
+    image: '/products/kamiz.jpg',
+    imageAlt: 'Traditional Kamiz Shalwar collection',
+    ctaText: 'Explore Now',
+    ctaHref: '/shop',
+  },
+];
+
+// Benefits Data
+const benefitsData: Array<{
+  id: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  color: 'blue' | 'green' | 'yellow' | 'purple' | 'pink' | 'indigo';
+}> = [
+  {
+    id: 1,
+    icon: <FiTruck />,
+    title: 'Free Shipping',
+    description: 'On orders over Rs 500',
+    color: 'blue',
+  },
+  {
+    id: 2,
+    icon: <FiLock />,
+    title: 'Secure Payment',
+    description: 'Safe and encrypted transactions',
+    color: 'green',
+  },
+  {
+    id: 3,
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      </svg>
+    ),
+    title: 'Premium Quality',
+    description: 'Best materials and craftsmanship',
+    color: 'yellow',
+  },
+  {
+    id: 4,
+    icon: <FiRotateCcw />,
+    title: '30-Day Returns',
+    description: 'Hassle-free return policy',
+    color: 'purple',
+  },
+];
+
+// Statistics Data
+const statsData = [
+  {
+    id: 1,
+    number: '10K+',
+    label: 'Happy Customers',
+    icon: '😊',
+  },
+  {
+    id: 2,
+    number: '500+',
+    label: 'Products Available',
+    icon: '👕',
+  },
+  {
+    id: 3,
+    number: '98%',
+    label: 'Satisfaction Rate',
+    icon: '⭐',
+  },
+  {
+    id: 4,
+    number: '24/7',
+    label: 'Customer Support',
+    icon: '💬',
+  },
+];
+
+// Testimonials Data
+const testimonialsData = [
+  {
+    id: 1,
+    name: 'Rajesh Kumar',
+    role: 'Fashion Enthusiast',
+    review: 'Excellent quality products and fast delivery. Highly recommended!',
+    rating: 5,
+    avatar: '👨‍💼',
+  },
+  {
+    id: 2,
+    name: 'Priya Singh',
+    role: 'Business Professional',
+    review: 'The suits are perfectly tailored and the fabric quality is outstanding.',
+    rating: 5,
+    avatar: '👩‍💼',
+  },
+  {
+    id: 3,
+    name: 'Amit Patel',
+    role: 'Regular Customer',
+    review: 'Great prices, amazing selection, and wonderful customer service.',
+    rating: 5,
+    avatar: '👨‍🎨',
+  },
+];
 
 export default function Home() {
   const [latestProducts, setLatestProducts] = useState<WooProduct[]>([]);
@@ -57,39 +188,6 @@ export default function Home() {
 
     fetchProducts();
   }, []);
-
-    const heroSlides = [
-      {
-        id: '1',
-        title: 'Welcome to Our Store',
-        subtitle: 'Discover our premium collection of clothing and fashion items',
-        eyebrow: 'SHOP',
-        image: '/products/jeans.jpg',
-        imageAlt: 'Premium denim jeans collection',
-        ctaText: 'Shop Now',
-        ctaHref: '/shop',
-      },
-      {
-        id: '2',
-        title: 'Exclusive Collections',
-        subtitle: 'Find the perfect outfit for every occasion',
-        eyebrow: 'FEATURED',
-        image: '/products/suit.jpg',
-        imageAlt: 'Formal business suits collection',
-        ctaText: 'Browse Suits',
-        ctaHref: '/shop',
-      },
-      {
-        id: '3',
-        title: 'Traditional Wear',
-        subtitle: 'Embrace elegance with our traditional collection',
-        eyebrow: 'TRENDING',
-        image: '/products/kamiz.jpg',
-        imageAlt: 'Traditional Kamiz Shalwar collection',
-        ctaText: 'Explore Now',
-        ctaHref: '/shop',
-      },
-    ];
 
   return (
     <div>
@@ -175,10 +273,15 @@ export default function Home() {
             <p className="text-text/80 text-base sm:text-lg max-w-2xl mx-auto">Experience world-class fashion shopping with our commitment to quality, service, and style</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <BenefitCard icon={<FiTruck />} title="Free Shipping" description="On orders over Rs 500" color="blue" />
-            <BenefitCard icon={<FiLock />} title="Secure Payment" description="Safe and encrypted transactions" color="green" />
-            <BenefitCard icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>} title="Premium Quality" description="Best materials and craftsmanship" color="yellow" />
-            <BenefitCard icon={<FiRotateCcw />} title="30-Day Returns" description="Hassle-free return policy" color="purple" />
+            {benefitsData.map((benefit) => (
+              <BenefitCard 
+                key={benefit.id}
+                icon={benefit.icon} 
+                title={benefit.title} 
+                description={benefit.description} 
+                color={benefit.color} 
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -192,15 +295,12 @@ export default function Home() {
             <p className="text-background/80 text-base sm:text-lg">Our impact and success through the years</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
-            <StatCard number="10K+" label="Happy Customers" icon="😊" />
-            <StatCard number="500+" label="Products Available" icon="👕" />
-            <StatCard number="98%" label="Satisfaction Rate" icon="⭐" />
-            <StatCard number="24/7" label="Customer Support" icon="💬" />
+            {statsData.map((stat) => (
+              <StatCard key={stat.id} number={stat.number} label={stat.label} icon={stat.icon} />
+            ))}
           </div>
         </div>
       </section>
-
-
 
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background via-secondary to-background">
         <div className="max-w-7xl mx-auto w-full">
@@ -212,31 +312,9 @@ export default function Home() {
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              {
-                name: 'Rajesh Kumar',
-                role: 'Fashion Enthusiast',
-                review: 'Excellent quality products and fast delivery. Highly recommended!',
-                rating: 5,
-                avatar: '👨‍💼'
-              },
-              {
-                name: 'Priya Singh',
-                role: 'Business Professional',
-                review: 'The suits are perfectly tailored and the fabric quality is outstanding.',
-                rating: 5,
-                avatar: '👩‍💼'
-              },
-              {
-                name: 'Amit Patel',
-                role: 'Regular Customer',
-                review: 'Great prices, amazing selection, and wonderful customer service.',
-                rating: 5,
-                avatar: '👨‍🎨'
-              },
-            ].map((testimonial, idx) => (
+            {testimonialsData.map((testimonial) => (
               <TestimonialCard
-                key={idx}
+                key={testimonial.id}
                 name={testimonial.name}
                 role={testimonial.role}
                 review={testimonial.review}
