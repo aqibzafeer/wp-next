@@ -39,6 +39,23 @@ export default function ProductsWithFilters({
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
+    // Filter out Uncategorized products and placeholder products
+    result = result.filter((p) => {
+      // Hide products in Uncategorized category
+      if (p.category.toLowerCase() === 'uncategorized') {
+        return false;
+      }
+      // Hide placeholder products
+      if (p.name.toLowerCase().includes('import placeholder')) {
+        return false;
+      }
+      // Hide products with price 0
+      if (p.price === 0 && (!p.sale_price || p.sale_price === 0)) {
+        return false;
+      }
+      return true;
+    });
+
     if (selectedCategory !== 'All') {
       result = result.filter((p) => p.category === selectedCategory);
     }
@@ -65,85 +82,165 @@ export default function ProductsWithFilters({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
-      {/* Filters Sidebar */}
-      <div className="lg:w-64 flex-shrink-0">
-        <div className="bg-white rounded-lg shadow p-6 sticky top-20">
-          <h2 className="font-bold text-lg mb-4">Filters</h2>
-
-          {/* Search */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+    <div className="space-y-4 md:space-y-6">
+      {/* Enhanced Filters Bar - Always Visible */}
+      <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl shadow-md border border-gray-200/80 backdrop-blur-sm p-4 md:p-5 transition-all duration-300">
+        <div className="flex flex-col gap-4">
+          {/* Search Bar - Premium Design */}
+          <div className="relative">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search products by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={loading && products.length === 0}
+              className="w-full px-4 py-2.5 md:py-3 border border-gray-300 rounded-xl text-sm md:text-base bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md disabled:shadow-none placeholder:text-gray-400"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors text-lg font-bold"
+              >
+                ×
+              </button>
+            )}
           </div>
 
-          {/* Category Filter */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {categories.map((cat) => (
-                <label key={cat} className="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded">
-                  <input
-                    type="radio"
-                    name="category"
-                    value={cat}
-                    checked={selectedCategory === cat}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="mr-2 cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-700">{cat}</span>
-                </label>
-              ))}
+          {/* Category Pills - Enhanced Scroll Design */}
+          <div className="relative">
+            <div className="flex items-center gap-2 overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 scroll-smooth">
+              <div className="flex gap-2 flex-nowrap md:flex-wrap min-w-max md:min-w-0">
+                {categories.length > 0 ? (
+                  categories.map((cat) => {
+                    const isActive = selectedCategory === cat;
+                    const productCount = products.filter(p => 
+                      cat === 'All' ? true : p.category === cat
+                    ).length;
+                    
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        disabled={loading && products.length === 0}
+                        className={`group relative px-4 py-2 md:px-5 md:py-2.5 rounded-xl text-sm md:text-base font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 ${
+                          isActive
+                            ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-300'
+                            : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-indigo-300 hover:shadow-md'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {cat}
+                          {!isActive && productCount > 0 && (
+                            <span className="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
+                              {productCount}
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div
+                        key={i}
+                        className="h-10 w-24 bg-gradient-to-r from-gray-200 to-gray-300 rounded-xl animate-pulse"
+                        style={{ animationDelay: `${i * 0.1}s` }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+            {/* Scroll Indicator Shadows */}
+            <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none md:hidden" />
+            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none md:hidden" />
           </div>
 
-          {/* Sort */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="">Default</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="name">Name A-Z</option>
-            </select>
-          </div>
+          {/* Sort & Actions - Refined Layout */}
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap md:flex-nowrap">
+            <div className="relative flex-1 md:flex-none md:min-w-[200px]">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                disabled={loading && products.length === 0}
+                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 md:py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white disabled:bg-gray-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md disabled:shadow-none cursor-pointer font-medium text-gray-700"
+              >
+                <option value="">Sort By: Default</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name: A-Z</option>
+              </select>
+            </div>
 
-          {/* Reset Filters */}
-          <button
-            onClick={() => {
-              setSelectedCategory('All');
-              setSortBy('');
-              setSearchTerm('');
-            }}
-            className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition text-sm font-medium"
-          >
-            Reset Filters
-          </button>
+            {/* Clear Filters Button - Enhanced */}
+            {(selectedCategory !== 'All' || sortBy || searchTerm) && (
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setSortBy('');
+                  setSearchTerm('');
+                }}
+                disabled={loading && products.length === 0}
+                className="px-4 py-2.5 md:py-3 text-sm md:text-base font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95 whitespace-nowrap"
+                title="Clear All Filters"
+              >
+                <span className="hidden sm:inline">Clear All</span>
+                <span className="sm:hidden">Clear</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Products Section */}
-      <div className="flex-1">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {loading ? 'Loading Products...' : `Results (${filteredProducts.length})`}
-          </h2>
-          <p className="text-gray-600 mt-1">
-            {loading
-              ? 'Please wait while we fetch your products'
-              : `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''} found`}
+      {/* Results Summary - Enhanced */}
+      <div className="flex items-center justify-between px-1 md:px-2">
+        <div className="flex-1">
+          <div className="flex items-baseline gap-3">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
+              {loading ? (
+                'Loading...'
+              ) : (
+                <>
+                  <span className="text-indigo-600">{filteredProducts.length}</span>
+                  <span className="text-gray-400 text-lg mx-1">/</span>
+                  <span className="text-gray-500 text-lg">{products.length}</span>
+                </>
+              )}
+            </h2>
+            <span className="text-sm md:text-base font-medium text-gray-500">
+              {loading ? 'products' : 'Products'}
+            </span>
+          </div>
+          <p className="text-xs md:text-sm text-gray-500 mt-1 flex items-center gap-2">
+            {loading ? (
+              'Fetching products from WooCommerce...'
+            ) : (
+              <>
+                {selectedCategory !== 'All' && (
+                  <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
+                    {selectedCategory}
+                  </span>
+                )}
+                {sortBy && (
+                  <span className="bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-medium text-xs">
+                    Sorted
+                  </span>
+                )}
+                {searchTerm && (
+                  <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium text-xs">
+                    Searching
+                  </span>
+                )}
+                {!selectedCategory || selectedCategory === 'All' && !sortBy && !searchTerm ? 'Showing all products' : ''}
+              </>
+            )}
           </p>
         </div>
+      </div>
+
+      {/* Products Grid */}
+      <div>
 
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">

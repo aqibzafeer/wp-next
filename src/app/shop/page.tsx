@@ -1,53 +1,14 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
 import HeroSection from '@/components/HeroSection';
 import ProductsWithFilters from '@/components/ProductsWithFilters';
 import ProductSkeleton from '@/components/ProductSkeleton';
-import { fetchWooProducts, fetchWooCategories } from '@/lib/woocommerceAPI';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  sale_price: number | null;
-  image: string;
-  category: string;
-  description: string;
-  stock_status: string;
-}
+import { useWooProducts } from '@/hooks';
 
 export default function WooProPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>(['All']);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        const wooProducts = await fetchWooProducts({ per_page: 50 });
-        setProducts(wooProducts);
-
-        const uniqueCategories = Array.from(
-          new Set(wooProducts.map((p) => p.category))
-        ).sort();
-        setCategories(['All', ...uniqueCategories]);
-
-        if (wooProducts.length === 0) {
-          setError('No products found. Make sure your WordPress API credentials are configured correctly.');
-        }
-      } catch (err) {
-        setError('Failed to fetch products from WordPress. Please check your API configuration.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, []);
+  const { products, categories, loading, error } = useWooProducts({
+    per_page: 50,
+  });
 
   return (
     <div>
