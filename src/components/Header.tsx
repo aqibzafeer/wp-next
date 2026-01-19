@@ -59,7 +59,7 @@ export default function Header() {
               { href: '/', label: 'Home', icon: FiHome },
               { href: '/about', label: 'About', icon: FiInfo },
               { href: '/products', label: 'Products', icon: FiShoppingBag },
-              { href: '/wp-pro', label: 'Wp Products', icon: FiPackage },
+              { href: '/shop', label: 'Shop', icon: FiPackage },
               { href: '/contact', label: 'Contact', icon: FiMessageCircle },
             ].map((item) => {
               const IconComponent = item.icon;
@@ -130,7 +130,7 @@ export default function Header() {
                   { href: '/', label: 'Home', icon: FiHome },
                   { href: '/about', label: 'About', icon: FiInfo },
                   { href: '/products', label: 'Products', icon: FiShoppingBag },
-                  { href: '/wp-pro', label: 'Wp Products', icon: FiPackage },
+                  { href: '/shop', label: 'Shop', icon: FiPackage },
                   { href: '/contact', label: 'Contact', icon: FiMessageCircle },
                 ].map((item) => {
                   const IconComponent = item.icon;

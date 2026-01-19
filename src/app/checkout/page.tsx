@@ -115,7 +115,7 @@ export default function CheckoutPage() {
                 Browse Products
               </Link>
               <Link
-                href="/wp-pro"
+                href="/shop"
                 className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
               >
                 WooCommerce Products
@@ -281,7 +281,7 @@ export default function CheckoutPage() {
             )}
             <div className="flex gap-3">
               <Link
-                href="/wp-pro"
+                href="/shop"
                 className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold"
               >
                 Continue Shopping

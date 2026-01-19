@@ -152,7 +152,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center max-w-md mx-auto">
             <p className="text-text/70 mb-6">{error || 'The product you are looking for does not exist.'}</p>
-            <Link href="/wp-pro" className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition">
+            <Link href="/shop" className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition">
               Back to Products
             </Link>
           </div>
@@ -181,7 +181,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link
-          href="/wp-pro"
+          href="/shop"
           className="inline-block mb-8 text-indigo-600 hover:text-indigo-700 font-semibold"
         >
           ← Back to Products
@@ -397,7 +397,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
             {[1, 2, 3, 4].map((i) => (
               <Link
                 key={i}
-                href="/wp-pro"
+                href="/shop"
                 className="text-center p-4 bg-gray-50 rounded hover:bg-gray-100 transition"
               >
                 <div className="mb-2">📦</div>

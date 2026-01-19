@@ -35,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/wp-pro`,
+      url: `${baseUrl}/shop`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,

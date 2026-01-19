@@ -52,7 +52,7 @@ export default function WooProPage() {
   return (
     <div>
       <HeroSection
-        title="WordPress Products"
+        title="SHOP"
         subtitle="Live products from your WordPress/WooCommerce store"
         eyebrow="WOO COMMERCE"
         minHeight="sm"
@@ -112,7 +112,7 @@ export default function WooProPage() {
           <ProductsWithFilters
             products={products}
             categories={categories}
-            href={(id) => `/wp-pro/${id}`}
+            href={(id) => `/shop/${id}`}
             isWooCommerce={true}
           />
         )}
