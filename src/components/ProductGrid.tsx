@@ -54,9 +54,12 @@ export default function ProductGrid({
             <div className="block relative">
               <div className="aspect-square overflow-hidden bg-secondary relative">
                 <img
-                  src={product.image}
+                  src={product.image || '/products/not-found.jpg'}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/products/not-found.jpg';
+                  }}
                 />
               </div>
               <div className="absolute top-3 left-3 flex flex-col gap-2">

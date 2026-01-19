@@ -36,7 +36,7 @@ export default function AboutPage() {
         title="Our Fashion Story"
         subtitle="Welcome to AG — where fashion meets passion! Since 2015, we've been creating stylish, comfortable, and high-quality clothing that makes you feel confident and look your best."
         eyebrow="ABOUT US"
-        image="/products/jeans.jpg"
+        image="/hero-section.jpeg"
         imageAlt="Stacked denim jeans"
         imagePriority
         minHeight="lg"

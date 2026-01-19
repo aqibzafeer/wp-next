@@ -262,28 +262,20 @@ export default function ProductsWithFilters({
                   className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
                 >
                   <div className="aspect-square overflow-hidden bg-gray-100 relative">
-                    {product.image ? (
-                      <>
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/cat/women.jpg';
-                          }}
-                        />
-                        {/* Discount Badge */}
-                        {hasDiscount && (
-                          <div className="absolute top-3 left-3">
-                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                              -{discountPercent}%
-                            </span>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                        <span className="text-gray-400">No Image</span>
+                    <img
+                      src={product.image || '/products/not-found.jpg'}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/products/not-found.jpg';
+                      }}
+                    />
+                    {/* Discount Badge */}
+                    {hasDiscount && (
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                          -{discountPercent}%
+                        </span>
                       </div>
                     )}
                   </div>

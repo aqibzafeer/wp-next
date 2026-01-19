@@ -42,8 +42,9 @@ export default function ContactPage() {
         title="Get In Touch"
         subtitle="We're here to help and answer any questions you might have."
         eyebrow="Connect With Us"
-        image="/products/suit.jpg"
-        minHeight="md"
+        image="/hero-section.jpeg"
+        imageAlt="Contact us"
+        minHeight="lg"
         align="center"
       />
 

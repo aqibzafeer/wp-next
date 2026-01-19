@@ -40,7 +40,6 @@ export default function HeroSection({
 
   return (
     <section className={`relative overflow-hidden ${heightClass} bg-background`}>
-      {/* Background image */}
       <div className="absolute inset-0">
         {image ? (
           <Image
@@ -56,7 +55,6 @@ export default function HeroSection({
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent" aria-hidden="true" />
         )}
 
-        {/* Overlays for readability */}
         <div className="absolute inset-0 bg-text/70 sm:bg-text/80" aria-hidden="true" />
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-background/10 rounded-full blur-2xl" aria-hidden="true" />
         <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-primary/10 rounded-full blur-2xl" aria-hidden="true" />

@@ -16,7 +16,10 @@ export default function WooProPage() {
         title="SHOP"
         subtitle="Live products from your WordPress/WooCommerce store"
         eyebrow="WOO COMMERCE"
-        minHeight="sm"
+        image="/hero-section.jpeg"
+        imageAlt="Shop collection"
+        minHeight="lg"
+        align="center"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
