@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createWooOrder } from '@/lib/woocommerceAPI';
+import { createWooOrder } from '@/services/woocommerce.service';
 import type { CreateOrderData } from '@/types';
 
 export async function POST(request: NextRequest) {

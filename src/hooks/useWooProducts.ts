@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchWooProducts } from '@/lib/woocommerceAPI';
+import { fetchWooProducts } from '@/services/woocommerce.service';
 import type { WooProduct } from '@/types';
 
 interface UseWooProductsOptions {

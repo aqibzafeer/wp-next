@@ -4,60 +4,18 @@ import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import HeroSection from '@/components/HeroSection';
 import Button from '@/components/Button';
-import { fetchWooProductById, fetchWooProductVariations } from '@/lib/woocommerceAPI';
+import { fetchWooProductById, fetchWooProductVariations } from '@/services/woocommerce.service';
 import { useCart } from '@/lib/cartContext';
-
-interface Attribute {
-  id: number;
-  name: string;
-  slug: string;
-  position: number;
-  visible: boolean;
-  variation: boolean;
-  options: string[];
-}
-
-interface DefaultAttribute {
-  id: number;
-  name: string;
-  option: string;
-}
-
-interface Variation {
-  id: number;
-  price: string;
-  sale_price: string | null;
-  stock_status: string;
-  attributes: Array<{ name: string; option: string }>;
-  images: Array<{ src: string }>;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  sale_price: number | null;
-  image: string;
-  images: Array<{ src: string }>;
-  category: string;
-  description: string;
-  short_description: string;
-  stock_status: string;
-  sku: string;
-  type?: string;
-  attributes?: Attribute[];
-  default_attributes?: DefaultAttribute[];
-  variations?: number[];
-}
+import type { WooProduct, WooVariation, WooAttribute, WooDefaultAttribute } from '@/types';
 
 export default function WooProductPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const [product, setProduct] = useState<Product | null>(null);
-  const [variations, setVariations] = useState<Variation[]>([]);
+  const [product, setProduct] = useState<WooProduct | null>(null);
+  const [variations, setVariations] = useState<WooVariation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedVariant, setSelectedVariant] = useState<Variation | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<WooVariation | null>(null);
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
@@ -86,7 +44,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
               setSelectedAttributes(defaults);
 
               // Find and select matching variation
-              const matchedVariation = variationsList.find((v: Variation) =>
+              const matchedVariation = variationsList.find((v: WooVariation) =>
                 wooProduct.default_attributes!.every((defaultAttr) =>
                   v.attributes.some((a) => a.name === defaultAttr.name && a.option === defaultAttr.option)
                 )
@@ -117,7 +75,7 @@ export default function WooProductPage({ params }: { params: Promise<{ id: strin
 
     // Find matching variation
     if (variations.length > 0) {
-      const matched = variations.find((v: Variation) =>
+      const matched = variations.find((v: WooVariation) =>
         Object.entries(newAttributes).every(([key, val]) =>
           v.attributes.some((a) => {
             const slugFromName = a.name.toLowerCase().replace(/\s+/g, '-');

@@ -11,7 +11,7 @@ import TestimonialCard from '@/components/TestimonialCard';
 import StatCard from '@/components/StatCard';
 import CTASection from '@/components/CTASection';
 import ProductSkeleton from '@/components/ProductSkeleton';
-import { fetchWooProducts } from '@/lib/woocommerceAPI';
+import { fetchWooProducts } from '@/services/woocommerce.service';
 import type { WooProduct } from '@/types';
 import { FiTruck, FiLock, FiRotateCcw, FiChevronRight } from 'react-icons/fi';
 import { heroSlides, benefitsData, statsData, testimonialsData } from '@/lib/allData';

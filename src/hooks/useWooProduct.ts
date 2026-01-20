@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   fetchWooProductById,
   fetchWooProductVariations,
-} from '@/lib/woocommerceAPI';
+} from '@/services/woocommerce.service';
 import type { WooProduct, WooVariation, WooDefaultAttribute } from '@/types';
 
 interface UseWooProductReturn {

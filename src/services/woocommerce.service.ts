@@ -81,7 +81,7 @@ interface FetchProductsParams {
  */
 export async function fetchWooProducts(
   params: FetchProductsParams = {}
-): Promise<WooProduct[]> {
+): Promise<{ products: WooProduct[]; totalPages: number }> {
   const { per_page = 10, page = 1 } = params;
 
   const searchParams = new URLSearchParams({
@@ -96,9 +96,12 @@ export async function fetchWooProducts(
     }
   );
 
-  if (!products) return [];
+  if (!products) return { products: [], totalPages: 0 };
 
-  return products.map((product) => ({
+  // Get total pages from response headers if available
+  const totalPages = 1; // This would need to be extracted from headers in a real implementation
+
+  const mappedProducts = products.map((product) => ({
     id: product.id,
     name: product.name,
     price: parseFloat(product.price || '0'),
@@ -115,7 +118,10 @@ export async function fetchWooProducts(
     attributes: product.attributes || [],
     default_attributes: product.default_attributes || [],
     variations: product.variations || [],
-  } as WooProduct));
+    date_created: product.date_created || new Date().toISOString(),
+  }));
+
+  return { products: mappedProducts, totalPages };
 }
 
 /**
@@ -147,6 +153,7 @@ export async function fetchWooProductById(
     attributes: product.attributes || [],
     default_attributes: product.default_attributes || [],
     variations: product.variations || [],
+    date_created: product.date_created || new Date().toISOString(),
   } as WooProduct;
 }
 
@@ -166,11 +173,22 @@ export async function fetchWooProductVariations(
   return variations || [];
 }
 
+interface WooCategory {
+  id: number;
+  name: string;
+  slug: string;
+  parent: number;
+  description: string;
+  display: string;
+  image: { src: string } | null;
+  count: number;
+}
+
 /**
  * Fetch all product categories
  */
-export async function fetchWooCategories(): Promise<any[]> {
-  const categories = await wooApiRequest<any[]>(`/products/categories`, {
+export async function fetchWooCategories(): Promise<WooCategory[]> {
+  const categories = await wooApiRequest<WooCategory[]>(`/products/categories`, {
     next: { revalidate: 3600 },
   });
 

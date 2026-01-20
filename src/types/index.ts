@@ -74,7 +74,22 @@ export interface WooProductRaw {
   date_created?: string;
 }
 
-export interface WooProduct extends Product {
+export interface WooProduct {
+  id: number;
+  name: string;
+  price: number;
+  sale_price: number | null;
+  image: string;
+  images: Array<{ src: string }>;
+  category: string;
+  categories: Array<{ name: string }>;
+  description: string;
+  short_description: string;
+  stock_status: string;
+  sku: string;
+  type?: string;
+  attributes?: WooAttribute[];
+  default_attributes?: WooDefaultAttribute[];
   variations?: number[];
   date_created?: string;
 }
