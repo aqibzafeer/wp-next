@@ -14,138 +14,7 @@ import ProductSkeleton from '@/components/ProductSkeleton';
 import { fetchWooProducts } from '@/lib/woocommerceAPI';
 import type { WooProduct } from '@/types';
 import { FiTruck, FiLock, FiRotateCcw, FiChevronRight } from 'react-icons/fi';
-
-// Hero Slides Data
-const heroSlides = [
-  {
-    id: '1',
-    title: 'Welcome to Our Store',
-    subtitle: 'Discover our premium collection of clothing and fashion items',
-    eyebrow: 'SHOP',
-    image: '/hero-section.jpeg',
-    imageAlt: 'Premium denim jeans collection',
-    ctaText: 'Shop Now',
-    ctaHref: '/shop',
-  },
-  {
-    id: '2',
-    title: 'Exclusive Collections',
-    subtitle: 'Find the perfect outfit for every occasion',
-    eyebrow: 'FEATURED',
-    image: '/hero-section.jpeg',
-    imageAlt: 'Formal business suits collection',
-    ctaText: 'Browse Suits',
-    ctaHref: '/shop',
-  },
-  {
-    id: '3',
-    title: 'Traditional Wear',
-    subtitle: 'Embrace elegance with our traditional collection',
-    eyebrow: 'TRENDING',
-    image: '/hero-section.jpeg',
-    imageAlt: 'Traditional Kamiz Shalwar collection',
-    ctaText: 'Explore Now',
-    ctaHref: '/shop',
-  },
-];
-
-// Benefits Data
-const benefitsData: Array<{
-  id: number;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  color: 'blue' | 'green' | 'yellow' | 'purple' | 'pink' | 'indigo';
-}> = [
-  {
-    id: 1,
-    icon: <FiTruck />,
-    title: 'Free Shipping',
-    description: 'On orders over Rs 500',
-    color: 'blue',
-  },
-  {
-    id: 2,
-    icon: <FiLock />,
-    title: 'Secure Payment',
-    description: 'Safe and encrypted transactions',
-    color: 'green',
-  },
-  {
-    id: 3,
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-      </svg>
-    ),
-    title: 'Premium Quality',
-    description: 'Best materials and craftsmanship',
-    color: 'yellow',
-  },
-  {
-    id: 4,
-    icon: <FiRotateCcw />,
-    title: '30-Day Returns',
-    description: 'Hassle-free return policy',
-    color: 'purple',
-  },
-];
-
-// Statistics Data
-const statsData = [
-  {
-    id: 1,
-    number: '10K+',
-    label: 'Happy Customers',
-    icon: '😊',
-  },
-  {
-    id: 2,
-    number: '500+',
-    label: 'Products Available',
-    icon: '👕',
-  },
-  {
-    id: 3,
-    number: '98%',
-    label: 'Satisfaction Rate',
-    icon: '⭐',
-  },
-  {
-    id: 4,
-    number: '24/7',
-    label: 'Customer Support',
-    icon: '💬',
-  },
-];
-
-// Testimonials Data
-const testimonialsData = [
-  {
-    id: 1,
-    name: 'Rajesh Kumar',
-    role: 'Fashion Enthusiast',
-    review: 'Excellent quality products and fast delivery. Highly recommended!',
-    rating: 5,
-    avatar: '👨‍💼',
-  },
-  {
-    id: 2,
-    name: 'Priya Singh',
-    role: 'Business Professional',
-    review: 'The suits are perfectly tailored and the fabric quality is outstanding.',
-    rating: 5,
-    avatar: '👩‍💼',
-  },
-  {
-    id: 3,
-    name: 'Amit Patel',
-    role: 'Regular Customer',
-    review: 'Great prices, amazing selection, and wonderful customer service.',
-    rating: 5,
-    avatar: '👨‍🎨',
-  },
-];
+import { heroSlides, benefitsData, statsData, testimonialsData } from '@/lib/allData';
 
 export default function Home() {
   const [latestProducts, setLatestProducts] = useState<WooProduct[]>([]);
@@ -159,7 +28,7 @@ export default function Home() {
         setLoading(true);
         setError(null);
         
-        const products = await fetchWooProducts({ per_page: 50 });
+        const { products } = await fetchWooProducts({ per_page: 50 });
         
         if (products.length === 0) {
           setError('No products available. Please configure WooCommerce API credentials.');
@@ -168,8 +37,8 @@ export default function Home() {
         }
 
         const sortedByPrice = [...products].sort((a, b) => {
-          const priceA = b.sale_price || b.price; 
-          const priceB = a.sale_price || a.price;
+          const priceA = Number(b.sale_price || b.price) || 0; 
+          const priceB = Number(a.sale_price || a.price) || 0;
           return priceA - priceB; 
         });
 

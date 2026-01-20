@@ -1,5 +1,6 @@
 import type {
   WooProduct,
+  WooProductRaw,
   WooVariation,
   WooOrderResponse,
   CreateOrderData,
@@ -88,7 +89,7 @@ export async function fetchWooProducts(
     page: page.toString(),
   });
 
-  const products = await wooApiRequest<any[]>(
+  const products = await wooApiRequest<WooProductRaw[]>(
     `/products?${searchParams.toString()}`,
     {
       next: { revalidate: 3600 }, // Cache for 1 hour
@@ -114,7 +115,7 @@ export async function fetchWooProducts(
     attributes: product.attributes || [],
     default_attributes: product.default_attributes || [],
     variations: product.variations || [],
-  }));
+  } as WooProduct));
 }
 
 /**
@@ -123,7 +124,7 @@ export async function fetchWooProducts(
 export async function fetchWooProductById(
   id: number
 ): Promise<WooProduct | null> {
-  const product = await wooApiRequest<any>(`/products/${id}`, {
+  const product = await wooApiRequest<WooProductRaw>(`/products/${id}`, {
     next: { revalidate: 3600 },
   });
 
@@ -146,7 +147,7 @@ export async function fetchWooProductById(
     attributes: product.attributes || [],
     default_attributes: product.default_attributes || [],
     variations: product.variations || [],
-  };
+  } as WooProduct;
 }
 
 /**

@@ -1,4 +1,6 @@
 // WordPress/WooCommerce API utility functions
+import { wooCache } from './woocommerceCache';
+import type { WooProduct, WooProductRaw } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_WOOCOMMERCE_API_URL || 'https://demo.woocommerce.com/wp-json/wc/v3';
 const CUSTOMER_KEY = process.env.NEXT_PUBLIC_WOO_CUSTOMER_KEY || '';
@@ -20,24 +22,6 @@ interface WooDefaultAttribute {
   option: string;
 }
 
-interface WooProduct {
-  id: number;
-  name: string;
-  price: string;
-  sale_price: string | null;
-  description: string;
-  short_description: string;
-  images: Array<{ src: string }>;
-  stock_status: string;
-  categories: Array<{ name: string }>;
-  sku: string;
-  type?: string;
-  attributes?: WooAttribute[];
-  default_attributes?: WooDefaultAttribute[];
-  variations?: number[];
-  date_created?: string;
-}
-
 // Create Basic Auth header for WooCommerce API
 const createAuthHeader = (): Record<string, string> => {
   if (!CUSTOMER_KEY || !CONSUMER_SECRET) {
@@ -50,55 +34,62 @@ const createAuthHeader = (): Record<string, string> => {
   };
 };
 
-export async function fetchWooProducts(params?: { per_page?: number; page?: number }) {
-  try {
-    const searchParams = new URLSearchParams({
-      per_page: (params?.per_page || 10).toString(),
-      page: (params?.page || 1).toString(),
-    });
+export async function fetchWooProducts(params?: { per_page?: number; page?: number }): Promise<{ products: WooProduct[]; totalPages: number }> {
+  const cacheKey = `products-${params?.per_page || 10}-${params?.page || 1}`;
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...createAuthHeader(),
-    };
+  return wooCache.getOrSet(cacheKey, async () => {
+    try {
+      const searchParams = new URLSearchParams({
+        per_page: (params?.per_page || 10).toString(),
+        page: (params?.page || 1).toString(),
+      });
 
-    const response = await fetch(
-      `${API_BASE_URL}/products?${searchParams.toString()}`,
-      {
-        method: 'GET',
-        headers,
-        next: { revalidate: 3600 }, // Cache for 1 hour
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...createAuthHeader(),
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/products?${searchParams.toString()}`,
+        {
+          method: 'GET',
+          headers,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.statusText}`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch products: ${response.statusText}`);
+      const products: WooProductRaw[] = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+
+      const mappedProducts = products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: parseFloat(product.price || '0'),
+        sale_price: product.sale_price ? parseFloat(product.sale_price) : null,
+        description: product.description || '',
+        short_description: product.short_description || '',
+        image: product.images?.[0]?.src || '',
+        images: product.images || [],
+        stock_status: product.stock_status,
+        category: product.categories?.[0]?.name || 'Uncategorized',
+        categories: product.categories || [],
+        sku: product.sku,
+        type: product.type || 'simple',
+        attributes: product.attributes || [],
+        default_attributes: product.default_attributes || [],
+        variations: product.variations || [],
+        date_created: product.date_created || new Date().toISOString(),
+      }));
+
+      return { products: mappedProducts, totalPages };
+    } catch (error) {
+      console.warn('Redis not available, falling back to direct API calls:', error);
+      return { products: [], totalPages: 0 };
     }
-
-    const products: WooProduct[] = await response.json();
-    return products.map((product) => ({
-      id: product.id,
-      name: product.name,
-      price: parseFloat(product.price || '0'),
-      sale_price: product.sale_price ? parseFloat(product.sale_price) : null,
-      description: product.description || '',
-      short_description: product.short_description || '',
-      image: product.images?.[0]?.src || '',
-      images: product.images || [],
-      stock_status: product.stock_status,
-      category: product.categories?.[0]?.name || 'Uncategorized',
-      categories: product.categories || [],
-      sku: product.sku,
-      type: product.type || 'simple',
-      attributes: product.attributes || [],
-      default_attributes: product.default_attributes || [],
-      variations: product.variations || [],
-      date_created: product.date_created || new Date().toISOString(),
-    }));
-  } catch (error) {
-    console.error('Error fetching WooCommerce products:', error);
-    return [];
-  }
+  });
 }
 
 export async function fetchWooProductById(id: number) {
@@ -118,7 +109,7 @@ export async function fetchWooProductById(id: number) {
       throw new Error(`Failed to fetch product: ${response.statusText}`);
     }
 
-    const product: WooProduct = await response.json();
+    const product: WooProductRaw = await response.json();
     return {
       id: product.id,
       name: product.name,

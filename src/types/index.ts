@@ -1,8 +1,5 @@
-// Centralized type definitions for the entire application
 
-// ============================================
 // PRODUCT TYPES
-// ============================================
 
 export interface Product {
   id: number;
@@ -15,14 +12,25 @@ export interface Product {
   stock_status: string;
 }
 
-export interface WooProduct extends Product {
+export interface WooProductRaw {
+  id: number;
+  name: string;
+  price: string;
+  sale_price: string | null;
+  description: string;
   short_description: string;
   images: Array<{ src: string }>;
+  stock_status: string;
   categories: Array<{ name: string }>;
   sku: string;
   type?: string;
   attributes?: WooAttribute[];
   default_attributes?: WooDefaultAttribute[];
+  variations?: number[];
+  date_created?: string;
+}
+
+export interface WooProduct extends Product {
   variations?: number[];
   date_created?: string;
 }
@@ -52,9 +60,7 @@ export interface WooVariation {
   images: Array<{ src: string }>;
 }
 
-// ============================================
 // CART TYPES
-// ============================================
 
 export interface CartItem {
   id: number;
@@ -74,9 +80,7 @@ export interface ProductInfo {
   category: string;
 }
 
-// ============================================
 // ORDER TYPES
-// ============================================
 
 export interface OrderLineItem {
   product_id: number;
@@ -140,10 +144,7 @@ export interface WooOrderInfo {
   orderTotal: string;
 }
 
-// ============================================
 // CHECKOUT TYPES
-// ============================================
-
 export interface CustomerInfo {
   firstName: string;
   lastName: string;
@@ -163,10 +164,7 @@ export type CheckoutStep = 'shipping' | 'payment' | 'success';
 
 export type PaymentMethod = 'stripe' | 'cod';
 
-// ============================================
 // API RESPONSE TYPES
-// ============================================
-
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;

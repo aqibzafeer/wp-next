@@ -1,12 +1,6 @@
 import type { MetadataRoute } from 'next'
+import { robotsConfig } from '@/lib/allData';
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/api', '/admin'],
-    },
-    sitemap: 'https://www.azlangarments.com/sitemap.xml',
-  }
+  return robotsConfig;
 }

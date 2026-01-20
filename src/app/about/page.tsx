@@ -8,6 +8,7 @@ import BenefitCard from '@/components/BenefitCard';
 import Button from '@/components/Button';
 import { FiShoppingBag, FiTarget, FiTrendingUp, FiAward, FiZap, FiUsers } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaInstagram, FaTiktok, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { coreValuesData, sustainabilityData, infoCardsData, newsletterData, socialLinks } from '@/lib/allData';
 
 export default function AboutPage() {
   const [email, setEmail] = useState('');
@@ -19,15 +20,6 @@ export default function AboutPage() {
     setEmail('');
     setTimeout(() => setSubscribed(false), 3000);
   };
-
-  const socialLinks = [
-    { name: 'Facebook', icon: FaFacebook, url: 'https://facebook.com' },
-    { name: 'Twitter', icon: FaTwitter, url: 'https://twitter.com' },
-    { name: 'Instagram', icon: FaInstagram, url: 'https://instagram.com' },
-    { name: 'TikTok', icon: FaTiktok, url: 'https://tiktok.com' },
-    { name: 'LinkedIn', icon: FaLinkedin, url: 'https://linkedin.com' },
-    { name: 'YouTube', icon: FaYoutube, url: 'https://youtube.com' },
-  ];
 
   return (
     <div className="text-gray-800 overflow-hidden">
@@ -57,10 +49,15 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <BenefitCard icon={<FiShoppingBag />} title="Our Products" description="High-quality products tailored to your needs" color="blue" />
-            <BenefitCard icon={<FiTarget />} title="Our Mission" description="Empower lives through innovation and quality" color="green" />
-            <BenefitCard icon={<FiTrendingUp />} title="Our Vision" description="Global leader in innovative solutions" color="purple" />
-            <BenefitCard icon={<FiAward />} title="Our Values" description="Integrity, quality, and customer satisfaction" color="yellow" />
+            {coreValuesData.map((value) => (
+              <BenefitCard 
+                key={value.id}
+                icon={value.icon} 
+                title={value.title} 
+                description={value.description} 
+                color={value.color} 
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -103,22 +100,11 @@ export default function AboutPage() {
               </div>
 
               <div className="space-y-6">
-                {[
-                  {
-                    icon: FiZap,
-                    title: 'Eco-Fabrics',
-                    desc: 'We use 85% organic cotton, bamboo, and recycled polyester in our collections',
-                  },
-                  {
-                    icon: FiUsers,
-                    title: 'Artisan Crafted',
-                    desc: 'Hand-finished by skilled tailors using traditional techniques',
-                  },
-                ].map((item, index) => {
+                {sustainabilityData.map((item) => {
                   const IconComponent = item.icon;
                   return (
                     <div
-                      key={index}
+                      key={item.id}
                       className="flex items-start gap-4 p-4 hover:bg-white rounded-xl transition-colors"
                     >
                       <div className="text-3xl flex-shrink-0">
@@ -151,46 +137,9 @@ export default function AboutPage() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: '📞',
-                title: 'Contact Us',
-                content: (
-                  <>
-                    <p className="text-gray-600 mt-2">
-                      email:{' '}
-                      <a href="mailto:aqib@azlangarments.live" className="text-indigo-600 hover:text-indigo-800 font-medium">
-                        aqib@azlangarments.live
-                      </a>
-                    </p>
-                    <p className="text-gray-600 mt-2">
-                      or call us at{' '}
-                      <a href="tel:+1-800-000-0000" className="text-indigo-600 hover:text-indigo-800 font-medium">
-                        +1-800-000-0000
-                      </a>
-                    </p>
-                  </>
-                ),
-              },
-              {
-                icon: '👥',
-                title: 'Our Team',
-                content: <p className="text-gray-600">Talented professionals dedicated to delivering the best experience.</p>,
-              },
-              {
-                icon: '💬',
-                title: 'Testimonials',
-                content: (
-                  <div className="bg-indigo-50 p-4 rounded-lg">
-                    <p className="text-gray-600 italic">
-                      "The quality and service exceeded my expectations! Highly recommended."
-                    </p>
-                  </div>
-                ),
-              },
-            ].map((card, index) => (
+            {infoCardsData.map((card) => (
               <div
-                key={index}
+                key={card.id}
                 className="bg-white rounded-xl shadow-md p-8 flex flex-col items-center text-center hover:shadow-lg transition-all border border-gray-100 hover:scale-105"
               >
                 <div className="bg-indigo-100 p-4 rounded-full mb-5 text-3xl">{card.icon}</div>
@@ -211,10 +160,10 @@ export default function AboutPage() {
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500">
-              Join Our Community
+              {newsletterData.title}
             </span>
           </h2>
-          <p className="text-gray-600 mb-8">Get 15% off your first order and exclusive access to new collections</p>
+          <p className="text-gray-600 mb-8">{newsletterData.subtitle}</p>
 
           {subscribed && (
             <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-lg">
@@ -252,9 +201,9 @@ export default function AboutPage() {
           <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">Stay updated with our latest products, offers, and news.</p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            {socialLinks.map((social, index) => (
+            {socialLinks.map((social) => (
               <a
-                key={index}
+                key={social.name}
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"

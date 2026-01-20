@@ -4,6 +4,7 @@ import { useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaInstagram, FaTiktok, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { contactInfoData, socialLinks } from '@/lib/allData';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -25,15 +26,6 @@ export default function ContactPage() {
     setFormData({ name: '', email: '', subject: '', message: '' });
     setTimeout(() => setSubmitted(false), 5000);
   };
-
-  const socialLinks = [
-    { name: 'Facebook', icon: FaFacebook, url: 'https://facebook.com' },
-    { name: 'Twitter', icon: FaTwitter, url: 'https://twitter.com' },
-    { name: 'Instagram', icon: FaInstagram, url: 'https://instagram.com' },
-    { name: 'LinkedIn', icon: FaLinkedin, url: 'https://linkedin.com' },
-    { name: 'YouTube', icon: FaYoutube, url: 'https://youtube.com' },
-    { name: 'TikTok', icon: FaTiktok, url: 'https://tiktok.com' },
-  ];
 
   return (
     <section className="w-full mx-auto bg-gray-50">
@@ -60,48 +52,31 @@ export default function ContactPage() {
                 </h3>
 
                 <div className="space-y-5 md:space-y-6">
-                  {/* Phone */}
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 bg-white/10 p-2.5 rounded-lg">
-                      <FiPhone className="w-6 h-6" />
-                    </div>
-                    <div className="ml-4">
-                      <h4 className="text-lg md:text-xl font-semibold">Phone</h4>
-                      <a
-                        href="tel:+92-202-508-9439"
-                        className="mt-1 text-white/90 hover:text-white hover:underline block"
-                      >
-                        +92 202 508 9439
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 bg-white/10 p-2.5 rounded-lg">
-                      <FiMail className="w-6 h-6" />
-                    </div>
-                    <div className="ml-4">
-                      <h4 className="text-lg md:text-xl font-semibold">Email</h4>
-                      <a href="mailto:aqib@azlangarments.live" className="mt-1 text-white/90 hover:text-white hover:underline block">
-                        aqib@azlangarments.live
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 bg-white/10 p-2.5 rounded-lg">
-                      <FiMapPin className="w-6 h-6" />
-                    </div>
-                    <div className="ml-4">
-                      <h4 className="text-lg md:text-xl font-semibold">Address</h4>
-                      <p className="mt-1 text-white/90">
-                        I-10 Islamabad<br />
-                        Pakistan
-                      </p>
-                    </div>
-                  </div>
+                  {contactInfoData.map((info) => {
+                    const IconComponent = info.icon;
+                    return (
+                      <div key={info.id} className="flex items-start">
+                        <div className="flex-shrink-0 bg-white/10 p-2.5 rounded-lg">
+                          <IconComponent className="w-6 h-6" />
+                        </div>
+                        <div className="ml-4">
+                          <h4 className="text-lg md:text-xl font-semibold">{info.title}</h4>
+                          {info.href ? (
+                            <a
+                              href={info.href}
+                              className="mt-1 text-white/90 hover:text-white hover:underline block"
+                            >
+                              {info.content}
+                            </a>
+                          ) : (
+                            <p className="mt-1 text-white/90 whitespace-pre-line">
+                              {info.content}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Follow Us */}

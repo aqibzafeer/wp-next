@@ -36,16 +36,16 @@ export function useWooProducts(
       setError(null);
 
       const fetchedProducts = await fetchWooProducts({ per_page, page });
-      setProducts(fetchedProducts);
+      setProducts(fetchedProducts.products);
 
       // Extract unique categories
       const uniqueCategories = Array.from(
-        new Set(fetchedProducts.map((p) => p.category))
+        new Set(fetchedProducts.products.map((p) => p.category))
       ).sort();
       setCategories(['All', ...uniqueCategories]);
 
       // Set error if no products found
-      if (fetchedProducts.length === 0) {
+      if (fetchedProducts.products.length === 0) {
         setError(
           'No products found. Make sure your WordPress API credentials are configured correctly.'
         );
