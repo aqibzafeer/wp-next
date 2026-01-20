@@ -1,5 +1,49 @@
 
+// ============================================
+// CONTEXT TYPES
+// ============================================
+
+export interface CartContextType {
+  items: CartItem[];
+  addToCart: (productId: number, quantity?: number) => void;
+  addProductToCart: (product: ProductInfo, quantity?: number) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  getTotalPrice: () => number;
+  getTotalItems: () => number;
+}
+
+export interface ToasterContextType {
+  addToast: (message: string, type?: 'success' | 'error' | 'info', duration?: number) => string;
+  removeToast: (id: string) => void;
+}
+
+// ============================================
+// SECURITY TYPES
+// ============================================
+
+export interface SecurityConfig {
+  allowedOrigins: string[];
+  rateLimit: {
+    windowMs: number;
+    maxRequests: number;
+  };
+  corsHeaders: Record<string, string>;
+}
+
+// ============================================
+// CACHE TYPES
+// ============================================
+
+export interface CacheOptions {
+  ttl?: number; // Time to live in seconds
+  key?: string; // Custom cache key
+}
+
+// ============================================
 // PRODUCT TYPES
+// ============================================
 
 export interface Product {
   id: number;

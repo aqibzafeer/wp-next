@@ -2,11 +2,7 @@
 
 import { createContext, useContext, ReactNode } from 'react';
 import Toaster, { useToaster } from '@/components/Toaster';
-
-interface ToasterContextType {
-  addToast: (message: string, type?: 'success' | 'error' | 'info', duration?: number) => string;
-  removeToast: (id: string) => void;
-}
+import type { ToasterContextType } from '@/types';
 
 const ToasterContext = createContext<ToasterContextType | undefined>(undefined);
 

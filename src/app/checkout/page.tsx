@@ -7,13 +7,7 @@ import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from '@/lib/stripe';
 import StripeCheckoutForm from '@/components/StripeCheckoutForm';
-
-interface WooOrderInfo {
-  orderId: number;
-  orderNumber: string;
-  orderStatus: string;
-  orderTotal: string;
-}
+import type { WooOrderInfo } from '@/types';
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCart();

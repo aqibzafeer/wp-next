@@ -2,35 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { DUMMY_PRODUCTS } from './dummyData';
-
-export interface CartItem {
-  id: number;
-  quantity: number;
-  price: number;
-  name: string;
-  image: string;
-  category: string;
-}
-
-export interface ProductInfo {
-  id: number;
-  name: string;
-  price: number;
-  sale_price?: number | null;
-  image: string;
-  category: string;
-}
-
-interface CartContextType {
-  items: CartItem[];
-  addToCart: (productId: number, quantity?: number) => void;
-  addProductToCart: (product: ProductInfo, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
-  clearCart: () => void;
-  getTotalPrice: () => number;
-  getTotalItems: () => number;
-}
+import type { CartItem, ProductInfo, CartContextType } from '@/types';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 

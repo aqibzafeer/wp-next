@@ -1,4 +1,6 @@
 // Redis caching layer for WooCommerce API
+import type { CacheOptions } from '@/types';
+
 let redis: any = null;
 
 // Initialize Redis only if properly configured
@@ -12,11 +14,6 @@ try {
   }
 } catch (error) {
   console.warn('Redis not available, falling back to direct API calls:', error);
-}
-
-interface CacheOptions {
-  ttl?: number; // Time to live in seconds
-  key?: string; // Custom cache key
 }
 
 class WooCommerceCache {

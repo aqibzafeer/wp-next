@@ -1,26 +1,10 @@
 // WordPress/WooCommerce API utility functions
 import { wooCache } from './woocommerceCache';
-import type { WooProduct, WooProductRaw } from '@/types';
+import type { WooProduct, WooProductRaw, WooAttribute, WooDefaultAttribute, OrderLineItem, OrderBilling, OrderShipping, CreateOrderData, WooOrderResponse } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_WOOCOMMERCE_API_URL || 'https://demo.woocommerce.com/wp-json/wc/v3';
 const CUSTOMER_KEY = process.env.NEXT_PUBLIC_WOO_CUSTOMER_KEY || '';
 const CONSUMER_SECRET = process.env.NEXT_PUBLIC_WOO_CONSUMER_SECRET || '';
-
-interface WooAttribute {
-  id: number;
-  name: string;
-  slug: string;
-  position: number;
-  visible: boolean;
-  variation: boolean;
-  options: string[];
-}
-
-interface WooDefaultAttribute {
-  id: number;
-  name: string;
-  option: string;
-}
 
 // Create Basic Auth header for WooCommerce API
 const createAuthHeader = (): Record<string, string> => {
@@ -185,61 +169,7 @@ export async function fetchWooCategories() {
   }
 }
 
-// Order interfaces
-export interface OrderLineItem {
-  product_id: number;
-  quantity: number;
-  price?: number;
-  name?: string;
-}
-
-export interface OrderBilling {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  address_1: string;
-  city: string;
-  postcode: string;
-  country: string;
-}
-
-export interface OrderShipping {
-  first_name: string;
-  last_name: string;
-  address_1: string;
-  city: string;
-  postcode: string;
-  country: string;
-}
-
-export interface CreateOrderData {
-  payment_method: string;
-  payment_method_title: string;
-  set_paid: boolean;
-  billing: OrderBilling;
-  shipping: OrderShipping;
-  line_items: OrderLineItem[];
-  customer_note?: string;
-  meta_data?: Array<{ key: string; value: string }>;
-}
-
-export interface WooOrderResponse {
-  id: number;
-  number: string;
-  status: string;
-  total: string;
-  date_created: string;
-  billing: OrderBilling;
-  shipping: OrderShipping;
-  line_items: Array<{
-    id: number;
-    name: string;
-    product_id: number;
-    quantity: number;
-    total: string;
-  }>;
-}
+// Order interfaces - moved to types/index.ts
 
 // Create a new order in WooCommerce
 export async function createWooOrder(orderData: CreateOrderData): Promise<WooOrderResponse | null> {

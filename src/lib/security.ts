@@ -1,15 +1,7 @@
 // Security middleware for API routes
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-
-interface SecurityConfig {
-  allowedOrigins: string[];
-  rateLimit: {
-    windowMs: number;
-    maxRequests: number;
-  };
-  corsHeaders: Record<string, string>;
-}
+import type { SecurityConfig } from '@/types';
 
 const securityConfig: SecurityConfig = {
   allowedOrigins: [
